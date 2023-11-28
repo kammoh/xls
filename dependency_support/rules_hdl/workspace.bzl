@@ -16,17 +16,18 @@
 XLS uses."""
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
 def repo():
-    # Required to support rules_hdl, 0.7.0 release is current as of 2022-05-09.
+    # Required to support rules_hdl, 0.9.1 release is current as of 2023-11-22.
     http_archive(
         name = "rules_pkg",
-        sha256 = "eea0f59c28a9241156a47d7a8e32db9122f3d50b505fae0f33de6ce4d9b61834",
         urls = [
-            "https://github.com/bazelbuild/rules_pkg/releases/download/0.8.0/rules_pkg-0.8.0.tar.gz",
-            "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.8.0/rules_pkg-0.8.0.tar.gz",
+            "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.9.1/rules_pkg-0.9.1.tar.gz",
+            "https://github.com/bazelbuild/rules_pkg/releases/download/0.9.1/rules_pkg-0.9.1.tar.gz",
         ],
+        sha256 = "8f9ee2dc10c1ae514ee599a8b42ed99fa262b757058f65ad3c384289ff70c4b8",
     )
 
     # Required to support rules_hdl.
@@ -38,17 +39,20 @@ def repo():
     )
 
     # Current as of 2023-12-05
-    git_hash = "37efe7ca7b8469454eacd3b70ef5fe5ddfea2cf4"
-    archive_sha256 = "d32c5d3a0864e351ca8e6e40d3cf1bb4b78cfc85ea81b5c52bd44b23d274d321"
+    # git_hash = "37efe7ca7b8469454eacd3b70ef5fe5ddfea2cf4"
+    # archive_sha256 = "d32c5d3a0864e351ca8e6e40d3cf1bb4b78cfc85ea81b5c52bd44b23d274d321"
 
     maybe(
-        http_archive,
+        git_repository,
         name = "rules_hdl",
-        sha256 = archive_sha256,
-        strip_prefix = "bazel_rules_hdl-%s" % git_hash,
-        urls = [
-            "https://github.com/hdl/bazel_rules_hdl/archive/%s.tar.gz" % git_hash,
-        ],
+        # sha256 = archive_sha256,
+        # strip_prefix = "bazel_rules_hdl-%s" % git_hash,
+        # urls = [
+        #     # "https://github.com/hdl/bazel_rules_hdl/archive/%s.tar.gz" % git_hash,
+        #     "https://github.com/kammoh/bazel_rules_hdl/archive/%s.tar.gz" % "main",
+        # ],
+        branch = "main",
+        remote=  "https://github.com/kammoh/bazel_rules_hdl.git",
         repo_mapping = {
             "@rules_hdl_cpython": "@python39",
         },

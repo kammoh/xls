@@ -45,6 +45,7 @@
 #include "llvm/include/llvm/Passes/OptimizationLevel.h"
 #include "llvm/include/llvm/Passes/PassBuilder.h"
 #include "llvm/include/llvm/Support/CodeGen.h"
+#include "llvm/CodeGen/CommandFlags.h"
 #include "llvm/include/llvm/TargetParser/SubtargetFeature.h"
 #include "llvm/include/llvm/TargetParser/X86TargetParser.h"
 #include "xls/common/logging/log_lines.h"

@@ -56,9 +56,12 @@ def load_external_repositories():
     # LTS 20230802.1 (released 2023-09-18)
     http_archive(
         name = "com_google_absl",
-        urls = ["https://github.com/abseil/abseil-cpp/archive/refs/tags/20230802.1.zip"],
+        # urls = ["https://github.com/abseil/abseil-cpp/archive/2fca64174fe9aefe9250bdab1586eb5d69649cca.tar.gz"],
+        # strip_prefix = "abseil-cpp-2fca64174fe9aefe9250bdab1586eb5d69649cca",
+        # sha256 = "dcd2ce9ded178843138570c95d796c2a4a5d7ba998e44dc78dc1ea4b390b6b72",
+        # urls = ["https://github.com/abseil/abseil-cpp/archive/2fca64174fe9aefe9250bdab1586eb5d69649cca.zip"],
+        urls = ["https://github.com/abseil/abseil-cpp/archive/refs/tags/20230802.1.tar.gz"],
         strip_prefix = "abseil-cpp-20230802.1",
-        sha256 = "497ebdc3a4885d9209b9bd416e8c3f71e7a1fb8af249f6c2a80b7cbeefcd7e21",
     )
 
     # Protobuf depends on Skylib
@@ -105,20 +108,20 @@ def load_external_repositories():
         ],
     )
 
-    # Version release tag 2023-01-11
+    # Version release tag 2023-09-19
     http_archive(
         name = "com_google_absl_py",
-        strip_prefix = "abseil-py-1.4.0",
-        urls = ["https://github.com/abseil/abseil-py/archive/refs/tags/v1.4.0.tar.gz"],
-        sha256 = "0fb3a4916a157eb48124ef309231cecdfdd96ff54adf1660b39c0d4a9790a2c0",
+        strip_prefix = "abseil-py-2.0.0",
+        urls = ["https://github.com/abseil/abseil-py/archive/refs/tags/v2.0.0.tar.gz"],
+        sha256 = "2ab7ce101db02d7a1de48f8157cbd978f00a19bad44828fd213aa69fe352497d",
     )
 
     http_archive(
         name = "com_googlesource_code_re2",
-        sha256 = "8b4a8175da7205df2ad02e405a950a02eaa3e3e0840947cd598e92dca453199b",
-        strip_prefix = "re2-2023-06-01",
+        sha256 = "4e6593ac3c71de1c0f322735bc8b0492a72f66ffccfad76e259fa21c41d27d8a",
+        strip_prefix = "re2-2023-11-01",
         urls = [
-            "https://github.com/google/re2/archive/refs/tags/2023-06-01.tar.gz",
+            "https://github.com/google/re2/archive/refs/tags/2023-11-01.tar.gz",
             "https://storage.googleapis.com/mirror.tensorflow.org/github.com/google/re2/archive/refs/tags/2023-06-01.tar.gz",
         ],
     )
@@ -127,10 +130,11 @@ def load_external_repositories():
     # https://github.com/bazelbuild/rules_proto/releases/tag/5.3.0-21.7
     http_archive(
         name = "rules_proto",
-        sha256 = "dc3fb206a2cb3441b485eb1e423165b231235a1ea9b031b4433cf7bc1fa460dd",
-        strip_prefix = "rules_proto-5.3.0-21.7",
+        # sha256 = "dc3fb206a2cb3441b485eb1e423165b231235a1ea9b031b4433cf7bc1fa460dd",
+        # strip_prefix = "rules_proto-5.3.0-21.7",
+        strip_prefix = "rules_proto-6.0.0-rc0",
         urls = [
-            "https://github.com/bazelbuild/rules_proto/archive/refs/tags/5.3.0-21.7.tar.gz",
+            "https://github.com/bazelbuild/rules_proto/archive/refs/tags/6.0.0-rc0.tar.gz",
         ],
     )
 
@@ -138,9 +142,9 @@ def load_external_repositories():
     # https://github.com/bazelbuild/rules_python/releases/tag/0.25.0
     http_archive(
         name = "rules_python",
-        sha256 = "5868e73107a8e85d8f323806e60cad7283f34b32163ea6ff1020cf27abef6036",
-        strip_prefix = "rules_python-0.25.0",
-        url = "https://github.com/bazelbuild/rules_python/releases/download/0.25.0/rules_python-0.25.0.tar.gz",
+        # sha256 = "5868e73107a8e85d8f323806e60cad7283f34b32163ea6ff1020cf27abef6036",
+        strip_prefix = "rules_python-0.27.0",
+        url = "https://github.com/bazelbuild/rules_python/releases/download/0.27.0/rules_python-0.27.0.tar.gz",
     )
 
     http_archive(

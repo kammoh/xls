@@ -21,14 +21,14 @@ def repo():
     """Initialize the llvm-project repository."""
 
     # Updated 2023/11/10 to match internal version.
-    LLVM_COMMIT = "87b00ef35a0060e29fbc771e8557600e396f966c"
+    LLVM_COMMIT = "2e6c01be0db5d137c48953adde386eaef0982775"
     LLVM_SHA256 = "5d25d5a85241bf6584227844b4912b1f0f13c61918deb3163756f169a8879ce8"
 
     maybe(
         http_archive,
         name = "llvm-raw",
         build_file_content = "# empty",
-        sha256 = LLVM_SHA256,
+        # sha256 = LLVM_SHA256,
         strip_prefix = "llvm-project-" + LLVM_COMMIT,
         urls = ["https://github.com/llvm/llvm-project/archive/{commit}.tar.gz".format(commit = LLVM_COMMIT)],
     )
@@ -48,9 +48,9 @@ def repo():
         http_archive,
         name = "llvm_zstd",
         build_file = "@llvm-raw//utils/bazel/third_party_build:zstd.BUILD",
-        sha256 = "7c42d56fac126929a6a85dbc73ff1db2411d04f104fae9bdea51305663a83fd0",
-        strip_prefix = "zstd-1.5.2",
+        # sha256 = "7c42d56fac126929a6a85dbc73ff1db2411d04f104fae9bdea51305663a83fd0",
+        strip_prefix = "zstd-1.5.5",
         urls = [
-            "https://github.com/facebook/zstd/releases/download/v1.5.2/zstd-1.5.2.tar.gz",
+            "https://github.com/facebook/zstd/releases/download/v1.5.5/zstd-1.5.5.tar.gz",
         ],
     )
