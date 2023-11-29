@@ -1,6 +1,6 @@
 #!/bin/sh
-# -s
-bazel build -c opt --spawn_strategy=standalone -- \
+# --spawn_strategy=standalone -s
+bazel build -c opt --verbose_failures --sandbox_debug -- \
     //xls/dslx:interpreter_main //xls/dslx/ir_convert:ir_converter_main \
     //xls/tools:opt_main //xls/tools:codegen_main -//xls/contrib/xlscc/... \
     //xls/dslx/lsp:dslx_ls //xls/dslx:dslx_fmt //xls/dslx:highlight_main //xls/dslx:dslx_fmt //xls/tools:repl \

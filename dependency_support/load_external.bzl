@@ -48,9 +48,9 @@ def load_external_repositories():
     # V 1.14.0 (released 2023-08-02)
     http_archive(
         name = "com_google_googletest",
-        urls = ["https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip"],
-        strip_prefix = "googletest-1.14.0",
-        sha256 = "1f357c27ca988c3f7c6b4bf68a9395005ac6761f034046e9dde0896e3aba00e4",
+        urls = ["https://github.com/google/googletest/archive/76bb2afb8b522d24496ad1c757a49784fbfa2e42.zip"],
+        strip_prefix = "googletest-76bb2afb8b522d24496ad1c757a49784fbfa2e42",
+        # sha256 = "1f357c27ca988c3f7c6b4bf68a9395005ac6761f034046e9dde0896e3aba00e4",
     )
 
     # LTS 20230802.1 (released 2023-09-18)
@@ -226,12 +226,12 @@ def load_external_repositories():
         urls = ["https://github.com/google/or-tools/archive/refs/tags/v9.8.tar.gz"],
         sha256 = "85e10e7acf0a9d9a3b891b9b108f76e252849418c6230daea94ac429af8a4ea4",
         # Removes undesired dependencies like Eigen, BLISS, SCIP
-        patches = [
-            # "@com_google_xls//dependency_support/com_google_ortools:add_logging_prefix.diff",
-            # "@com_google_xls//dependency_support/com_google_ortools:no_glpk.diff",
-            # "@com_google_xls//dependency_support/com_google_ortools:no_scip_or_pdlp.diff",
-            # "@com_google_xls//dependency_support/com_google_ortools:remove_abslstringify.diff",
-        ],
+        # patches = [
+        #     "@com_google_xls//dependency_support/com_google_ortools:add_logging_prefix.diff",
+        #     "@com_google_xls//dependency_support/com_google_ortools:no_glpk.diff",
+        #     "@com_google_xls//dependency_support/com_google_ortools:no_scip_or_pdlp.diff",
+        #     "@com_google_xls//dependency_support/com_google_ortools:remove_abslstringify.diff",
+        # ],
     )
 
     http_archive(
@@ -241,16 +241,13 @@ def load_external_repositories():
         strip_prefix = "benchmark-1.7.0",
     )
 
-    # Updated 2023-10-19; latest version compatible with our current Abseil dependency.
-    FUZZTEST_COMMIT = "75e0b1ad97903dce24443948280b8f086b109ef4"
+    # Updated 2023-11-29; latest version
+    FUZZTEST_COMMIT = "231ecb9f4606adee57f1611f18dcee500e927eee"
     http_archive(
         name = "com_google_fuzztest",
         strip_prefix = "fuzztest-" + FUZZTEST_COMMIT,
         url = "https://github.com/google/fuzztest/archive/" + FUZZTEST_COMMIT + ".zip",
-        sha256 = "1f796e790889da24efbd5ebc142eaed02f702190825bdaab29e893f1376398ab",
-        patches = [
-            "@com_google_xls//dependency_support/com_google_fuzztest:make_config_generator_public.diff",
-        ],
+        sha256 = "bbdefcec894c18fb22ac8a97ca5a0547cb38f00ad0685c4045154dc381102da8",
     )
 
     # Updated 2023-2-1
