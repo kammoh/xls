@@ -113,7 +113,7 @@ def load_external_repositories():
         name = "com_google_absl_py",
         strip_prefix = "abseil-py-2.0.0",
         urls = ["https://github.com/abseil/abseil-py/archive/refs/tags/v2.0.0.tar.gz"],
-        sha256 = "2ab7ce101db02d7a1de48f8157cbd978f00a19bad44828fd213aa69fe352497d",
+        # sha256 = "0fb3a4916a157eb48124ef309231cecdfdd96ff54adf1660b39c0d4a9790a2c0",
     )
 
     http_archive(
@@ -149,13 +149,13 @@ def load_external_repositories():
 
     http_archive(
         name = "z3",
-        urls = ["https://github.com/Z3Prover/z3/archive/z3-4.12.2.tar.gz"],
-        sha256 = "9f58f3710bd2094085951a75791550f547903d75fe7e2fcb373c5f03fc761b8f",
-        strip_prefix = "z3-z3-4.12.2",
+        urls = ["https://github.com/Z3Prover/z3/archive/f36f21fa8c64c30c8a775ae6ca4950674bda33ae.tar.gz"],
+        # sha256 = "9f58f3710bd2094085951a75791550f547903d75fe7e2fcb373c5f03fc761b8f",
+        strip_prefix = "z3-f36f21fa8c64c30c8a775ae6ca4950674bda33ae",
         build_file = "@com_google_xls//dependency_support/z3:bundled.BUILD.bazel",
         # Fix gcc 13.x build failure
         # https://github.com/Z3Prover/z3/issues/6722
-        patches = ["@com_google_xls//dependency_support/z3:6723.patch"],
+        # patches = ["@com_google_xls//dependency_support/z3:6723.patch"],
     )
 
     http_archive(
@@ -183,9 +183,9 @@ def load_external_repositories():
 
     http_archive(
         name = "linenoise",
-        sha256 = "e7dbebca81b518544bea6622d5cc1a2e6347d080793cb0ba134edc66c3822fd5",
-        strip_prefix = "linenoise-97d2850af13c339369093b78abe5265845d78220",
-        urls = ["https://github.com/antirez/linenoise/archive/97d2850af13c339369093b78abe5265845d78220.zip"],
+        # sha256 = "e7dbebca81b518544bea6622d5cc1a2e6347d080793cb0ba134edc66c3822fd5",
+        strip_prefix = "linenoise-93b2db9bd4968f76148dd62cdadf050ed50b84b3",
+        urls = ["https://github.com/antirez/linenoise/archive/93b2db9bd4968f76148dd62cdadf050ed50b84b3.zip"],
         build_file = "@com_google_xls//dependency_support/linenoise:bundled.BUILD.bazel",
     )
 
@@ -220,18 +220,17 @@ def load_external_repositories():
         sha256 = "379113459b0feaf6bfbb584a91874c065078aa673222846ac765f86661c27407",
     )
 
-    # Released 2023-03-13, current as of 2023-05-08.
     http_archive(
         name = "com_google_ortools",
-        urls = ["https://github.com/google/or-tools/archive/refs/tags/v9.6.tar.gz"],
-        sha256 = "bc4b07dc9c23f0cca43b1f5c889f08a59c8f2515836b03d4cc7e0f8f2c879234",
-        strip_prefix = "or-tools-9.6",
+        strip_prefix = "or-tools-9.8",
+        urls = ["https://github.com/google/or-tools/archive/refs/tags/v9.8.tar.gz"],
+        sha256 = "85e10e7acf0a9d9a3b891b9b108f76e252849418c6230daea94ac429af8a4ea4",
         # Removes undesired dependencies like Eigen, BLISS, SCIP
         patches = [
-            "@com_google_xls//dependency_support/com_google_ortools:add_logging_prefix.diff",
-            "@com_google_xls//dependency_support/com_google_ortools:no_glpk.diff",
-            "@com_google_xls//dependency_support/com_google_ortools:no_scip_or_pdlp.diff",
-            "@com_google_xls//dependency_support/com_google_ortools:remove_abslstringify.diff",
+            # "@com_google_xls//dependency_support/com_google_ortools:add_logging_prefix.diff",
+            # "@com_google_xls//dependency_support/com_google_ortools:no_glpk.diff",
+            # "@com_google_xls//dependency_support/com_google_ortools:no_scip_or_pdlp.diff",
+            # "@com_google_xls//dependency_support/com_google_ortools:remove_abslstringify.diff",
         ],
     )
 
@@ -271,14 +270,23 @@ def load_external_repositories():
         urls = ["https://github.com/grailbio/bazel-compilation-database/archive/940cedacdb8a1acbce42093bf67f3a5ca8b265f7.tar.gz"],
     )
 
-    # 2023-03-17
+    # # 2023-11-13
     http_archive(
         name = "verible",
-        sha256 = "335673a5c74c9c10ce42e8abb36e89d93502734b54c6a9ff5a269a444dfe46a6",
-        strip_prefix = "verible-2f16e8418e1b452d4f301a95f8af307079dd8e05",
-        urls = ["https://github.com/chipsalliance/verible/archive/2f16e8418e1b452d4f301a95f8af307079dd8e05.tar.gz"],
+        sha256 = "08da34659996c6868621b3fa93f5850ed67432133ebdd904b5deb43708f90d5f",
+        strip_prefix = "verible-060bde0f3157021d3996e78b463248526579742d",
+        urls = ["https://github.com/chipsalliance/verible/archive/060bde0f3157021d3996e78b463248526579742d.tar.gz"],
         patches = ["@com_google_xls//dependency_support/verible:visibility.patch"],
     )
+
+    # 2023-03-17
+    # http_archive(
+    #     name = "verible",
+    #     sha256 = "335673a5c74c9c10ce42e8abb36e89d93502734b54c6a9ff5a269a444dfe46a6",
+    #     strip_prefix = "verible-2f16e8418e1b452d4f301a95f8af307079dd8e05",
+    #     urls = ["https://github.com/chipsalliance/verible/archive/2f16e8418e1b452d4f301a95f8af307079dd8e05.tar.gz"],
+    #     patches = ["@com_google_xls//dependency_support/verible:visibility.patch"],
+    # )
 
     # Same as Verible as of 2023-05-18
     http_archive(
@@ -290,6 +298,18 @@ def load_external_repositories():
             "https://github.com/nlohmann/json/archive/refs/tags/v3.10.2.tar.gz",
         ],
     )
+    http_archive(
+        name = "com_github_google_rules_install",
+        # The installer uses an option -T that is not available on MacOS, but
+        # it is benign to leave out.
+        # Upstream bug https://github.com/google/bazel_rules_install/issues/31
+        patch_args = ["-p1"],
+        patches = ["@verible//bazel:installer.patch"],
+        sha256 = "880217b21dbd40928bbe3bca3d97bd4de7d70d5383665ec007d7e1aac41d9739",
+        strip_prefix = "bazel_rules_install-5ae7c2a8d22de2558098e3872fc7f3f7edc61fb4",
+        urls = ["https://github.com/google/bazel_rules_install/archive/5ae7c2a8d22de2558098e3872fc7f3f7edc61fb4.zip"],
+    )
+
 
     # Version 1.4.7 released on 17.12.2020
     # https://github.com/facebook/zstd/releases/tag/v1.4.7

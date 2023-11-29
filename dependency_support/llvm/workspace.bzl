@@ -21,14 +21,14 @@ def repo():
     """Initialize the llvm-project repository."""
 
     # Updated 2023/11/10 to match internal version.
-    LLVM_COMMIT = "2e6c01be0db5d137c48953adde386eaef0982775"
-    LLVM_SHA256 = "5d25d5a85241bf6584227844b4912b1f0f13c61918deb3163756f169a8879ce8"
+    LLVM_COMMIT = "4d5079c4dc0ce30ba36315a7c822255cd1eeb9fb"
+    LLVM_SHA256 = "2817a9e76c3d2bf1ec857b2841a8e0b0790acfc1e8e5936adb9d9eb9576e9b87"
 
     maybe(
         http_archive,
         name = "llvm-raw",
         build_file_content = "# empty",
-        # sha256 = LLVM_SHA256,
+        sha256 = LLVM_SHA256,
         strip_prefix = "llvm-project-" + LLVM_COMMIT,
         urls = ["https://github.com/llvm/llvm-project/archive/{commit}.tar.gz".format(commit = LLVM_COMMIT)],
     )

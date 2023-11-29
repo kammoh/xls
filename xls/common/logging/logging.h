@@ -98,6 +98,7 @@
 #define XLS_COMMON_LOGGING_LOGGING_H_
 
 #include "absl/base/optimization.h"
+#include "absl/base/log_severity.h"
 #include "absl/status/status.h"
 #include "xls/common/logging/check_ops.h"
 #include "xls/common/logging/condition.h"

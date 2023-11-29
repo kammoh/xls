@@ -20,13 +20,12 @@ workspace(name = "com_google_xls")
 # files because it's not allowed to use `load` inside of a function.
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-# Commit on  2023-07-17, current as of 2023-08-05.
 http_archive(
     name = "com_grail_bazel_toolchain",
-    sha256 = "5fb0a6ae0f5bc72a7d80e6de0edad906c9936729734009f1c01dac4b06f966e0",
-    strip_prefix = "bazel-toolchain-f94335f1f5434256b1793dafbb7dd07773b0e76e",
+    sha256 = "afe9154ad85f0c0eb1f68b6036ad4e415ecf938b5e2bc17e4a76707452b48222",
+    strip_prefix = "bazel-toolchain-ade23e0e37c5308162c012a4f4224459c1c4fa22",
     urls = [
-        "https://github.com/grailbio/bazel-toolchain/archive/f94335f1f5434256b1793dafbb7dd07773b0e76e.zip",
+        "https://github.com/grailbio/bazel-toolchain/archive/ade23e0e37c5308162c012a4f4224459c1c4fa22.zip",
     ],
 )
 
@@ -38,7 +37,7 @@ load("@com_grail_bazel_toolchain//toolchain:rules.bzl", "llvm_toolchain")
 
 llvm_toolchain(
     name = "llvm_toolchain",
-    llvm_version = "16.0.0",
+    llvm_version = "16.0.5",
 )
 
 load("@llvm_toolchain//:toolchains.bzl", "llvm_register_toolchains")

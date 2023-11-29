@@ -1,10 +1,10 @@
 --- common/lsp/BUILD
 +++ common/lsp/BUILD
-@@ -13,7 +13,7 @@ load("//common/tools:jcxxgen.bzl", "jcxxgen")
-
+@@ -12,7 +12,7 @@
  package(
+     default_applicable_licenses = ["//:license"],
      default_visibility = [
--        "//:__subpackages__",
+-        "//verilog/tools/ls:__subpackages__",
 +        "//visibility:public",
      ],
  )
