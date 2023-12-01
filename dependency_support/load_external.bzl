@@ -50,7 +50,7 @@ def load_external_repositories():
         name = "com_google_googletest",
         urls = ["https://github.com/google/googletest/archive/76bb2afb8b522d24496ad1c757a49784fbfa2e42.zip"],
         strip_prefix = "googletest-76bb2afb8b522d24496ad1c757a49784fbfa2e42",
-        # sha256 = "1f357c27ca988c3f7c6b4bf68a9395005ac6761f034046e9dde0896e3aba00e4",
+        sha256 = "c8c5fb6bf567995cb5ea5c088c2fbaca6430aebd8173dd7161975cd32cbe0bda",
     )
 
     # LTS 20230802.1 (released 2023-09-18)
@@ -113,7 +113,7 @@ def load_external_repositories():
         name = "com_google_absl_py",
         strip_prefix = "abseil-py-2.0.0",
         urls = ["https://github.com/abseil/abseil-py/archive/refs/tags/v2.0.0.tar.gz"],
-        # sha256 = "0fb3a4916a157eb48124ef309231cecdfdd96ff54adf1660b39c0d4a9790a2c0",
+        sha256 = "2ab7ce101db02d7a1de48f8157cbd978f00a19bad44828fd213aa69fe352497d",
     )
 
     http_archive(
@@ -130,7 +130,7 @@ def load_external_repositories():
     # https://github.com/bazelbuild/rules_proto/releases/tag/5.3.0-21.7
     http_archive(
         name = "rules_proto",
-        # sha256 = "dc3fb206a2cb3441b485eb1e423165b231235a1ea9b031b4433cf7bc1fa460dd",
+        sha256 = "903af49528dc37ad2adbb744b317da520f133bc1cbbecbdd2a6c546c9ead080b",
         # strip_prefix = "rules_proto-5.3.0-21.7",
         strip_prefix = "rules_proto-6.0.0-rc0",
         urls = [
@@ -150,12 +150,9 @@ def load_external_repositories():
     http_archive(
         name = "z3",
         urls = ["https://github.com/Z3Prover/z3/archive/f36f21fa8c64c30c8a775ae6ca4950674bda33ae.tar.gz"],
-        # sha256 = "9f58f3710bd2094085951a75791550f547903d75fe7e2fcb373c5f03fc761b8f",
+        sha256 = "7eb543461a5ebb128f37668ea54ee58eb0fd1def9d8590ed9c674acfe9b2efc1",
         strip_prefix = "z3-f36f21fa8c64c30c8a775ae6ca4950674bda33ae",
         build_file = "@com_google_xls//dependency_support/z3:bundled.BUILD.bazel",
-        # Fix gcc 13.x build failure
-        # https://github.com/Z3Prover/z3/issues/6722
-        # patches = ["@com_google_xls//dependency_support/z3:6723.patch"],
     )
 
     http_archive(
@@ -186,16 +183,18 @@ def load_external_repositories():
         # sha256 = "e7dbebca81b518544bea6622d5cc1a2e6347d080793cb0ba134edc66c3822fd5",
         strip_prefix = "linenoise-93b2db9bd4968f76148dd62cdadf050ed50b84b3",
         urls = ["https://github.com/antirez/linenoise/archive/93b2db9bd4968f76148dd62cdadf050ed50b84b3.zip"],
+        sha256 = "03eb737b9d6db991d8f47eb4a446ba3a971b970cda18312bc9f9ecbb1e8b6c33",
         build_file = "@com_google_xls//dependency_support/linenoise:bundled.BUILD.bazel",
     )
 
-    # Released on 2023-06-01, current as of 2023-06-06.
-    # https://github.com/grpc/grpc/releases/tag/v1.55.1
+    # Released on 2023-11-28, current as of 2023-11-29.
     http_archive(
         name = "com_github_grpc_grpc",
-        urls = ["https://github.com/grpc/grpc/archive/v1.55.1.tar.gz"],
-        sha256 = "9c3c0a0ad986ee4fc0a9b58fd71255010068df7d1437c425b525d68c30c85ac7",
-        strip_prefix = "grpc-1.55.1",
+        urls = ["https://github.com/grpc/grpc/archive/v1.60.0.tar.gz"],
+        sha256 = "437068b8b777d3b339da94d3498f1dc20642ac9bfa76db43abdd522186b1542b",
+        strip_prefix = "grpc-1.60.0",
+        patches = ["@com_google_xls//dependency_support:grpc_absl_strcat_include.patch"],
+        patch_args = ["-p1"],
         repo_mapping = {
             "@local_config_python": "@python39",
             "@system_python": "@python39",
@@ -226,12 +225,12 @@ def load_external_repositories():
         urls = ["https://github.com/google/or-tools/archive/refs/tags/v9.8.tar.gz"],
         sha256 = "85e10e7acf0a9d9a3b891b9b108f76e252849418c6230daea94ac429af8a4ea4",
         # Removes undesired dependencies like Eigen, BLISS, SCIP
-        # patches = [
-        #     "@com_google_xls//dependency_support/com_google_ortools:add_logging_prefix.diff",
+        patches = [
+            "@com_google_xls//dependency_support/com_google_ortools:add_logging_prefix.diff",
         #     "@com_google_xls//dependency_support/com_google_ortools:no_glpk.diff",
         #     "@com_google_xls//dependency_support/com_google_ortools:no_scip_or_pdlp.diff",
         #     "@com_google_xls//dependency_support/com_google_ortools:remove_abslstringify.diff",
-        # ],
+        ],
     )
 
     http_archive(
@@ -318,3 +317,15 @@ def load_external_repositories():
         urls = ["https://github.com/facebook/zstd/releases/download/v1.4.7/zstd-1.4.7.tar.gz"],
         build_file = "@//dependency_support/com_github_facebook_zstd:bundled.BUILD.bazel",
     )
+
+    http_archive(
+        name = "com_google_protobuf",
+        # sha256 = "d0f5f605d0d656007ce6c8b5a82df3037e1d8fe8b121ed42e536f569dec16113",
+        strip_prefix = "protobuf-842f56b57a9e825d6cdd6c00947f6c19c18fe466",
+        urls = [
+            "https://github.com/protocolbuffers/protobuf/archive/842f56b57a9e825d6cdd6c00947f6c19c18fe466.tar.gz",
+        ],
+        # patches = ["@com_google_xls//dependency_support/],
+
+    )
+

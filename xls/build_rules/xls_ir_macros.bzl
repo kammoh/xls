@@ -267,4 +267,5 @@ def xls_ir_cc_library_macro(
             "//xls/jit:aot_runtime",
             "//xls/jit:type_layout",
         ],
+        tags = ["aot"],
     )

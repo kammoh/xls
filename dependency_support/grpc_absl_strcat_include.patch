@@ -1,0 +1,308 @@
+diff --git a/examples/cpp/cancellation/server.cc b/examples/cpp/cancellation/server.cc
+index 7c53797650..d35d941935 100644
+--- a/examples/cpp/cancellation/server.cc
++++ b/examples/cpp/cancellation/server.cc
+@@ -19,6 +19,7 @@
+ 
+ #include "absl/flags/flag.h"
+ #include "absl/flags/parse.h"
++#include "absl/strings/str_cat.h"
+ #include "absl/strings/str_format.h"
+ 
+ #include <grpcpp/grpcpp.h>
+diff --git a/src/core/ext/transport/chttp2/transport/hpack_parse_result.cc b/src/core/ext/transport/chttp2/transport/hpack_parse_result.cc
+index 4e87d291d8..b1007d7ce1 100644
+--- a/src/core/ext/transport/chttp2/transport/hpack_parse_result.cc
++++ b/src/core/ext/transport/chttp2/transport/hpack_parse_result.cc
+@@ -18,6 +18,7 @@
+ 
+ #include <stddef.h>
+ 
++#include "absl/strings/str_cat.h"
+ #include "absl/strings/str_format.h"
+ 
+ #include "src/core/ext/transport/chttp2/transport/hpack_constants.h"
+diff --git a/src/core/lib/event_engine/cf_engine/cfstream_endpoint.cc b/src/core/lib/event_engine/cf_engine/cfstream_endpoint.cc
+index 74f7392af9..241cd9e501 100644
+--- a/src/core/lib/event_engine/cf_engine/cfstream_endpoint.cc
++++ b/src/core/lib/event_engine/cf_engine/cfstream_endpoint.cc
+@@ -18,6 +18,8 @@
+ #include <AvailabilityMacros.h>
+ #ifdef AVAILABLE_MAC_OS_X_VERSION_10_12_AND_LATER
+ 
++#include "absl/strings/str_cat.h"
++
+ #include "src/core/lib/event_engine/cf_engine/cfstream_endpoint.h"
+ #include "src/core/lib/event_engine/trace.h"
+ #include "src/core/lib/gprpp/strerror.h"
+diff --git a/src/core/lib/json/json_util.cc b/src/core/lib/json/json_util.cc
+index 084a316a8e..2841376ac4 100644
+--- a/src/core/lib/json/json_util.cc
++++ b/src/core/lib/json/json_util.cc
+@@ -20,6 +20,8 @@
+ 
+ #include "src/core/lib/json/json_util.h"
+ 
++#include "absl/strings/str_cat.h"
++
+ #include "src/core/lib/gprpp/no_destruct.h"
+ #include "src/core/lib/gprpp/validation_errors.h"
+ #include "src/core/lib/json/json_args.h"
+diff --git a/src/core/lib/transport/metadata_batch.h b/src/core/lib/transport/metadata_batch.h
+index 0a81bd22a0..fdb4d8f4a3 100644
+--- a/src/core/lib/transport/metadata_batch.h
++++ b/src/core/lib/transport/metadata_batch.h
+@@ -32,6 +32,7 @@
+ #include "absl/functional/function_ref.h"
+ #include "absl/meta/type_traits.h"
+ #include "absl/strings/numbers.h"
++#include "absl/strings/str_cat.h"
+ #include "absl/strings/string_view.h"
+ #include "absl/types/optional.h"
+ 
+diff --git a/src/core/lib/transport/parsed_metadata.cc b/src/core/lib/transport/parsed_metadata.cc
+index 26619a138b..aa7c2c54df 100644
+--- a/src/core/lib/transport/parsed_metadata.cc
++++ b/src/core/lib/transport/parsed_metadata.cc
+@@ -16,6 +16,8 @@
+ 
+ #include "src/core/lib/transport/parsed_metadata.h"
+ 
++#include "absl/strings/str_cat.h"
++
+ namespace grpc_core {
+ namespace metadata_detail {
+ 
+diff --git a/src/core/tsi/alts/handshaker/alts_handshaker_client.cc b/src/core/tsi/alts/handshaker/alts_handshaker_client.cc
+index 4f71701c9b..594fa45cfc 100644
+--- a/src/core/tsi/alts/handshaker/alts_handshaker_client.cc
++++ b/src/core/tsi/alts/handshaker/alts_handshaker_client.cc
+@@ -23,6 +23,7 @@
+ #include <list>
+ 
+ #include "absl/strings/numbers.h"
++#include "absl/strings/str_cat.h"
+ #include "upb/upb.hpp"
+ 
+ #include <grpc/byte_buffer.h>
+diff --git a/src/cpp/client/secure_credentials.cc b/src/cpp/client/secure_credentials.cc
+index dadebcbfd6..983cf27268 100644
+--- a/src/cpp/client/secure_credentials.cc
++++ b/src/cpp/client/secure_credentials.cc
+@@ -26,6 +26,7 @@
+ 
+ #include "absl/status/status.h"
+ #include "absl/status/statusor.h"
++#include "absl/strings/str_cat.h"
+ #include "absl/strings/str_join.h"
+ #include "absl/types/optional.h"
+ 
+diff --git a/test/core/end2end/end2end_tests.cc b/test/core/end2end/end2end_tests.cc
+index cc5c942228..8457edd48c 100644
+--- a/test/core/end2end/end2end_tests.cc
++++ b/test/core/end2end/end2end_tests.cc
+@@ -24,6 +24,7 @@
+ 
+ #include "absl/memory/memory.h"
+ #include "absl/random/random.h"
++#include "absl/strings/str_cat.h"
+ 
+ #include <grpc/byte_buffer_reader.h>
+ #include <grpc/compression.h>
+diff --git a/test/core/iomgr/endpoint_pair_test.cc b/test/core/iomgr/endpoint_pair_test.cc
+index 287b8d3db0..7424bcedd3 100644
+--- a/test/core/iomgr/endpoint_pair_test.cc
++++ b/test/core/iomgr/endpoint_pair_test.cc
+@@ -22,6 +22,8 @@
+ 
+ #include <gtest/gtest.h>
+ 
++#include "absl/strings/str_cat.h"
++
+ #include <grpc/event_engine/event_engine.h>
+ #include <grpc/grpc.h>
+ #include <grpc/support/alloc.h>
+diff --git a/test/core/iomgr/tcp_client_posix_test.cc b/test/core/iomgr/tcp_client_posix_test.cc
+index c9ab2af500..9e7372b5ae 100644
+--- a/test/core/iomgr/tcp_client_posix_test.cc
++++ b/test/core/iomgr/tcp_client_posix_test.cc
+@@ -36,6 +36,8 @@
+ #include <sys/socket.h>
+ #include <unistd.h>
+ 
++#include "absl/strings/str_cat.h"
++
+ #include <grpc/grpc.h>
+ #include <grpc/support/alloc.h>
+ #include <grpc/support/log.h>
+diff --git a/test/core/transport/binder/binder_transport_test.cc b/test/core/transport/binder/binder_transport_test.cc
+index 6533fd7659..70957faaf6 100644
+--- a/test/core/transport/binder/binder_transport_test.cc
++++ b/test/core/transport/binder/binder_transport_test.cc
+@@ -26,6 +26,7 @@
+ 
+ #include "absl/memory/memory.h"
+ #include "absl/strings/match.h"
++#include "absl/strings/str_cat.h"
+ #include "absl/strings/str_join.h"
+ 
+ #include <grpc/grpc.h>
+diff --git a/test/core/transport/parsed_metadata_test.cc b/test/core/transport/parsed_metadata_test.cc
+index 458df652bb..79dbf8f01b 100644
+--- a/test/core/transport/parsed_metadata_test.cc
++++ b/test/core/transport/parsed_metadata_test.cc
+@@ -19,6 +19,7 @@
+ #include <memory>
+ 
+ #include "absl/strings/numbers.h"
++#include "absl/strings/str_cat.h"
+ #include "gmock/gmock.h"
+ #include "gtest/gtest.h"
+ 
+diff --git a/test/core/xds/xds_http_filters_test.cc b/test/core/xds/xds_http_filters_test.cc
+index 85c0fcfcd4..190a4dc967 100644
+--- a/test/core/xds/xds_http_filters_test.cc
++++ b/test/core/xds/xds_http_filters_test.cc
+@@ -25,6 +25,7 @@
+ #include <google/protobuf/wrappers.pb.h>
+ 
+ #include "absl/status/status.h"
++#include "absl/strings/str_cat.h"
+ #include "absl/strings/str_format.h"
+ #include "absl/strings/strip.h"
+ #include "absl/types/variant.h"
+diff --git a/test/cpp/end2end/channelz_service_test.cc b/test/cpp/end2end/channelz_service_test.cc
+index 333d2804d9..26c2ab1fe4 100644
+--- a/test/cpp/end2end/channelz_service_test.cc
++++ b/test/cpp/end2end/channelz_service_test.cc
+@@ -22,6 +22,7 @@
+ #include <gtest/gtest.h>
+ 
+ #include "absl/memory/memory.h"
++#include "absl/strings/str_cat.h"
+ 
+ #include <grpc/grpc.h>
+ #include <grpc/grpc_security.h>
+diff --git a/test/cpp/end2end/grpc_authz_end2end_test.cc b/test/cpp/end2end/grpc_authz_end2end_test.cc
+index 8a4d90f072..5eef10adc7 100644
+--- a/test/cpp/end2end/grpc_authz_end2end_test.cc
++++ b/test/cpp/end2end/grpc_authz_end2end_test.cc
+@@ -17,6 +17,8 @@
+ #include <gmock/gmock.h>
+ #include <gtest/gtest.h>
+ 
++#include "absl/strings/str_cat.h"
++
+ #include <grpcpp/channel.h>
+ #include <grpcpp/client_context.h>
+ #include <grpcpp/create_channel.h>
+diff --git a/test/cpp/end2end/rls_end2end_test.cc b/test/cpp/end2end/rls_end2end_test.cc
+index 7a2c441445..628da3f2bf 100644
+--- a/test/cpp/end2end/rls_end2end_test.cc
++++ b/test/cpp/end2end/rls_end2end_test.cc
+@@ -28,6 +28,7 @@
+ #include <gmock/gmock.h>
+ #include <gtest/gtest.h>
+ 
++#include "absl/strings/str_cat.h"
+ #include "absl/strings/str_format.h"
+ #include "absl/strings/str_join.h"
+ #include "absl/types/optional.h"
+diff --git a/test/cpp/end2end/ssl_credentials_test.cc b/test/cpp/end2end/ssl_credentials_test.cc
+index b1a51dafcc..1d92042939 100644
+--- a/test/cpp/end2end/ssl_credentials_test.cc
++++ b/test/cpp/end2end/ssl_credentials_test.cc
+@@ -20,6 +20,7 @@
+ #include <gmock/gmock.h>
+ #include <gtest/gtest.h>
+ 
++#include "absl/strings/str_cat.h"
+ #include "absl/synchronization/notification.h"
+ 
+ #include <grpc/grpc_security.h>
+diff --git a/test/cpp/end2end/xds/xds_outlier_detection_end2end_test.cc b/test/cpp/end2end/xds/xds_outlier_detection_end2end_test.cc
+index 5194fbfd15..3fbd42c8ef 100644
+--- a/test/cpp/end2end/xds/xds_outlier_detection_end2end_test.cc
++++ b/test/cpp/end2end/xds/xds_outlier_detection_end2end_test.cc
+@@ -20,6 +20,8 @@
+ #include <gmock/gmock.h>
+ #include <gtest/gtest.h>
+ 
++#include "absl/strings/str_cat.h"
++
+ #include "src/core/ext/filters/client_channel/backup_poller.h"
+ #include "src/core/lib/config/config_vars.h"
+ #include "src/proto/grpc/testing/xds/v3/cluster.grpc.pb.h"
+diff --git a/test/cpp/end2end/xds/xds_routing_end2end_test.cc b/test/cpp/end2end/xds/xds_routing_end2end_test.cc
+index bb42c8cbcd..07232b0226 100644
+--- a/test/cpp/end2end/xds/xds_routing_end2end_test.cc
++++ b/test/cpp/end2end/xds/xds_routing_end2end_test.cc
+@@ -20,6 +20,8 @@
+ #include <gmock/gmock.h>
+ #include <gtest/gtest.h>
+ 
++#include "absl/strings/str_cat.h"
++
+ #include "src/core/ext/filters/client_channel/backup_poller.h"
+ #include "src/core/lib/config/config_vars.h"
+ #include "src/proto/grpc/testing/xds/v3/fault.grpc.pb.h"
+diff --git a/test/cpp/ext/gcp/observability_test.cc b/test/cpp/ext/gcp/observability_test.cc
+index 144c057b73..d805502346 100644
+--- a/test/cpp/ext/gcp/observability_test.cc
++++ b/test/cpp/ext/gcp/observability_test.cc
+@@ -14,6 +14,7 @@
+ // limitations under the License.
+ //
+ 
++#include "absl/strings/str_cat.h"
+ #include "gmock/gmock.h"
+ #include "gtest/gtest.h"
+ 
+diff --git a/test/cpp/ext/otel/otel_test_library.cc b/test/cpp/ext/otel/otel_test_library.cc
+index 88c7d4c775..d6c977fb61 100644
+--- a/test/cpp/ext/otel/otel_test_library.cc
++++ b/test/cpp/ext/otel/otel_test_library.cc
+@@ -19,6 +19,7 @@
+ #include "test/cpp/ext/otel/otel_test_library.h"
+ 
+ #include "absl/functional/any_invocable.h"
++#include "absl/strings/str_cat.h"
+ #include "api/include/opentelemetry/metrics/provider.h"
+ #include "gmock/gmock.h"
+ #include "gtest/gtest.h"
+diff --git a/test/cpp/interop/client.cc b/test/cpp/interop/client.cc
+index b9edd471ad..ed7947b291 100644
+--- a/test/cpp/interop/client.cc
++++ b/test/cpp/interop/client.cc
+@@ -20,6 +20,7 @@
+ #include <unordered_map>
+ 
+ #include "absl/flags/flag.h"
++#include "absl/strings/str_cat.h"
+ 
+ #include <grpc/grpc.h>
+ #include <grpc/support/alloc.h>
+diff --git a/test/cpp/interop/istio_echo_server.cc b/test/cpp/interop/istio_echo_server.cc
+index 3987b76da2..9566a49ef1 100644
+--- a/test/cpp/interop/istio_echo_server.cc
++++ b/test/cpp/interop/istio_echo_server.cc
+@@ -30,6 +30,7 @@
+ 
+ #include "absl/algorithm/container.h"
+ #include "absl/flags/flag.h"
++#include "absl/strings/str_cat.h"
+ #include "absl/strings/str_format.h"
+ #include "absl/strings/str_join.h"
+ #include "absl/strings/str_split.h"
+diff --git a/tools/codegen/core/gen_config_vars.py b/tools/codegen/core/gen_config_vars.py
+index 0beae5d73e..4ee5b1b2d5 100755
+--- a/tools/codegen/core/gen_config_vars.py
++++ b/tools/codegen/core/gen_config_vars.py
+@@ -411,6 +411,7 @@ with open("src/core/lib/config/config_vars.cc", "w") as C:
+     print('#include "src/core/lib/config/config_vars.h"', file=C)
+     print('#include "src/core/lib/config/load_config.h"', file=C)
+     print('#include "absl/strings/escaping.h"', file=C)
++    print('#include "absl/strings/str_cat.h"', file=C)
+     print('#include "absl/flags/flag.h"', file=C)
+     print(file=C)
+ 

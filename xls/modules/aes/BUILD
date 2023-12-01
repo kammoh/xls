@@ -158,7 +158,7 @@ cc_test(
     data = [
         ":aes_gcm.ir",
     ],
-    tags = ["optonly"],
+    tags = ["optonly", "aot"],
     deps = [
         ":aes_test_common",
         "//xls/common:exit_status",
@@ -213,6 +213,7 @@ cc_test(
     name = "aes_test",
     srcs = ["aes_test.cc"],
     # The XLS AOT compiler does not currently support cross-compilation.
+    tags = ["aot"],
     deps = [
         ":aes_decrypt_cc",
         ":aes_encrypt_cc",

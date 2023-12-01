@@ -88,3 +88,14 @@ xls_pip_install_deps()
 load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
 
 grpc_extra_deps()
+
+http_archive(
+    name = "rules_foreign_cc",
+    sha256 = "2f3ea87eceae42171e505c6d22680949f4eb890865a10ce2d3bbb8bca5752ffe",
+    strip_prefix = "rules_foreign_cc-0258d350a9ff4c5145f131b7247d161a432dec8d",
+    url = "https://github.com/bazelbuild/rules_foreign_cc/archive/0258d350a9ff4c5145f131b7247d161a432dec8d.tar.gz",
+)
+
+load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
+
+rules_foreign_cc_dependencies()

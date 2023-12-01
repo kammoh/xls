@@ -1,14 +1,17 @@
 --- absl/base/log_severity.h
 +++ absl/base/log_severity.h
-@@ -89,9 +89,9 @@
+@@ -89,9 +89,12 @@
  // otherwise.  Avoid ODR-using this variable as it has internal linkage and thus
  // distinct storage in different TUs.
++#ifdef kLogDebugFatal
++#undef kLogDebugFatal
++#endif
  #ifdef NDEBUG
 -static constexpr absl::LogSeverity kLogDebugFatal = absl::LogSeverity::kError;
-+static constexpr absl::LogSeverity kLogDebugFatal = LogSeverity::kError;
++static constexpr absl::LogSeverity kLogDebugFatal = absl::LogSeverity::kError;
  #else
 -static constexpr absl::LogSeverity kLogDebugFatal = absl::LogSeverity::kFatal;
-+static constexpr absl::LogSeverity kLogDebugFatal = LogSeverity::kFatal;
++static constexpr absl::LogSeverity kLogDebugFatal = absl::LogSeverity::kFatal;
  #endif
  
  // LogSeverityName()

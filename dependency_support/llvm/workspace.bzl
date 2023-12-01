@@ -48,7 +48,7 @@ def repo():
         http_archive,
         name = "llvm_zstd",
         build_file = "@llvm-raw//utils/bazel/third_party_build:zstd.BUILD",
-        # sha256 = "7c42d56fac126929a6a85dbc73ff1db2411d04f104fae9bdea51305663a83fd0",
+        sha256 = "9c4396cc829cfae319a6e2615202e82aad41372073482fce286fac78646d3ee4",
         strip_prefix = "zstd-1.5.5",
         urls = [
             "https://github.com/facebook/zstd/releases/download/v1.5.5/zstd-1.5.5.tar.gz",
