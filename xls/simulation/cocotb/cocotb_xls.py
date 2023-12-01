@@ -29,52 +29,54 @@ XLS_CHANNEL_OPTIONAL_SIGNALS = []
 
 
 class XLSChannel(Bus):
-  _signals = XLS_CHANNEL_SIGNALS
-  _optional_signals = XLS_CHANNEL_OPTIONAL_SIGNALS
+    _signals = XLS_CHANNEL_SIGNALS
+    _optional_signals = XLS_CHANNEL_OPTIONAL_SIGNALS
 
-  def __init__(self, entity, name, **kwargs: Any):
-    super().__init__(entity, name, self._signals, self._optional_signals, **kwargs)
+    def __init__(self, entity, name, **kwargs: Any):
+        super().__init__(entity, name, self._signals, self._optional_signals, **kwargs)
 
 
 class XLSChannelDriver(BusDriver):
-  _signals = XLS_CHANNEL_SIGNALS
-  _optional_signals = XLS_CHANNEL_OPTIONAL_SIGNALS
+    _signals = XLS_CHANNEL_SIGNALS
+    _optional_signals = XLS_CHANNEL_OPTIONAL_SIGNALS
 
-  def __init__(self, entity: SimHandleBase, name: str, clock: SimHandleBase, **kwargs: Any):
-    BusDriver.__init__(self, entity, name, clock, **kwargs)
+    def __init__(self, entity: SimHandleBase, name: str, clock: SimHandleBase, **kwargs: Any):
+        BusDriver.__init__(self, entity, name, clock, **kwargs)
 
-    self.bus.data.setimmediatevalue(0)
-    self.bus.vld.setimmediatevalue(0)
+        self.bus.data.setimmediatevalue(0)
+        self.bus.vld.setimmediatevalue(0)
 
-  async def _driver_send(self, transaction: Transaction, sync: bool = True, **kwargs: Any) -> None:
-    if sync:
-      await RisingEdge(self.clock)
+    async def _driver_send(
+        self, transaction: Transaction, sync: bool = True, **kwargs: Any
+    ) -> None:
+        if sync:
+            await RisingEdge(self.clock)
 
-    data_to_send = (transaction if isinstance(transaction, Sequence) else [transaction])
+        data_to_send = transaction if isinstance(transaction, Sequence) else [transaction]
 
-    for word in data_to_send:
-      self.bus.vld.value = 1
-      self.bus.data.value = word
+        for word in data_to_send:
+            self.bus.vld.value = 1
+            self.bus.data.value = word
 
-      while True:
-        await RisingEdge(self.clock)
-        if self.bus.rdy.value:
-          break
+            while True:
+                await RisingEdge(self.clock)
+                if self.bus.rdy.value:
+                    break
 
-      self.bus.vld.value = 0
+            self.bus.vld.value = 0
 
 
 class XLSChannelMonitor(BusMonitor):
-  _signals = XLS_CHANNEL_SIGNALS
-  _optional_signals = XLS_CHANNEL_OPTIONAL_SIGNALS
+    _signals = XLS_CHANNEL_SIGNALS
+    _optional_signals = XLS_CHANNEL_OPTIONAL_SIGNALS
 
-  def __init__(self, entity: SimHandleBase, name: str, clock: SimHandleBase, **kwargs: Any):
-    BusMonitor.__init__(self, entity, name, clock, **kwargs)
+    def __init__(self, entity: SimHandleBase, name: str, clock: SimHandleBase, **kwargs: Any):
+        BusMonitor.__init__(self, entity, name, clock, **kwargs)
 
-  @cocotb.coroutine
-  async def _monitor_recv(self) -> None:
-    while True:
-      await RisingEdge(self.clock)
-      if self.bus.rdy.value:
-        vec = self.bus.data.value
-        self._recv(vec)
+    @cocotb.coroutine
+    async def _monitor_recv(self) -> None:
+        while True:
+            await RisingEdge(self.clock)
+            if self.bus.rdy.value:
+                vec = self.bus.data.value
+                self._recv(vec)
