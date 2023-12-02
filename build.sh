@@ -107,7 +107,7 @@ bazel-bin/xls/tools/package_bazel_build --output_dir $PREFIX/share \
 					# --inc_target xls/tools/ir_stats_main \
 					# --inc_target xls/tools/drpc_main \
                     # --inc_target xls/contrib/xlscc/xlscc \
-                    
+
 
 # create tools symlinks
 mkdir -p $PREFIX/bin

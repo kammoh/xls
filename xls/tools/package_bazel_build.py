@@ -236,8 +236,8 @@ class BazelTargetPackager:
 
       if link_to is None:
         # TODO(tedhong): 2020-10-01 Reduce occurrences of this
-        logging.info(
-            'INFO:  - Unable to find common path for %s, copying instead',
+        logging.debug(
+            'DEBUG:  - Unable to find common path for %s, copying instead',
             mapping)
         shutil.copy2(path, output_path, follow_symlinks=True)
       else:

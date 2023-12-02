@@ -249,12 +249,20 @@ absl::Status YosysSynthesisServiceImpl::RunNextPNR(
                                            synth_json_path.string()};
 
   if (synthesis_target_ == "ecp5") {
-    nextpnr_args.push_back("--45k");
+    nextpnr_args.push_back("--85k");
     nextpnr_args.push_back("--textcfg");
     pnr_path = temp_dir_path / "pnr.cfg";
     nextpnr_args.push_back(pnr_path->string());
+    nextpnr_args.push_back("--package");
+    nextpnr_args.push_back("CABGA756");
+    nextpnr_args.push_back("--speed");
+    nextpnr_args.push_back("8");
+    nextpnr_args.push_back("--timing-allow-fail");
+    // nextpnr_args.push_back("--out-of-context");
   } else if (synthesis_target_ == "ice40") {
     nextpnr_args.push_back("--hx8k");
+    nextpnr_args.push_back("--package");
+    nextpnr_args.push_back("ct256");
   }
 
   if (request->has_target_frequency_hz()) {

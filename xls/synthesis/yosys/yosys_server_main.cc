@@ -113,6 +113,7 @@ void RealMain() {
   std::shared_ptr<::grpc::ServerCredentials> creds = GetServerCredentials();
   builder.AddListeningPort(server_address, creds);
   builder.RegisterService(&service);
+  builder.SetMaxMessageSize(512 * 1024 * 1024);  // 512MB (default is 4MB)
   std::unique_ptr<::grpc::Server> server(builder.BuildAndStart());
   XLS_LOG(INFO) << "Serving on port: " << port;
   XLS_LOG(INFO) << "synthesis_target: " << synthesis_target;

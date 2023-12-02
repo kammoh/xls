@@ -29,20 +29,28 @@ from xls.synthesis import synthesis_service_pb2_grpc
 from xls.synthesis import timing_characterization_client as client
 
 FLAGS = flags.FLAGS
-flags.DEFINE_integer('port', 10000, 'Port to connect to synthesis server on.')
+flags.DEFINE_integer("port", 10000, "Port to connect to synthesis server on.")
 
 
 def main(argv):
-  if len(argv) != 1:
-    raise app.UsageError('Unexpected arguments.')
+    if len(argv) != 1:
+        raise app.UsageError("Unexpected arguments.")
 
-  channel_creds = client_credentials.get_credentials()
-  with grpc.secure_channel(f'localhost:{FLAGS.port}', channel_creds) as channel:
-    grpc.channel_ready_future(channel).result()
-    stub = synthesis_service_pb2_grpc.SynthesisServiceStub(channel)
+    channel_creds = client_credentials.get_credentials()
+    with grpc.secure_channel(
+        f"localhost:{FLAGS.port}",
+        channel_creds,
+        options=[
+            ("grpc.max_receive_message_length", 512 * 1024 * 1024),
+            ("grpc.max_send_message_length", 512 * 1024 * 1024),
+            ("grpc.max_message_length", 512 * 1024 * 1024),
+        ],
+    ) as channel:
+        grpc.channel_ready_future(channel).result()
+        stub = synthesis_service_pb2_grpc.SynthesisServiceStub(channel)
 
-    client.run_characterization(stub)
+        client.run_characterization(stub)
 
 
-if __name__ == '__main__':
-  app.run(main)
+if __name__ == "__main__":
+    app.run(main)
