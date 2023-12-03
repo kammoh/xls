@@ -47,10 +47,10 @@ _SAMPLES_PATH = flags.DEFINE_string(
     'samples_path', None, 'Path to proto providing sample points.'
 )
 _BAZEL_BIN_PATH = flags.DEFINE_string(
-    'bazel_bin_path', None, 'Root directory of bazel-bin'
+    'bazel_bin_path', "bazel", 'Root directory of bazel-bin'
 )
 _OPENROAD_PATH = flags.DEFINE_string(
-    'openroad_path', None, 'Root directory of OpenROAD-flow-scripts'
+    'openroad_path', "openroad", 'Root directory of OpenROAD-flow-scripts'
 )
 _DEBUG = flags.DEFINE_bool(
     'debug', False, 'Enable verbose debugging info for client and server'
@@ -61,10 +61,10 @@ _QUICK_RUN = flags.DEFINE_bool(
 
 # The options below are used when openroad_path is NOT specified
 _YOSYS_PATH = flags.DEFINE_string(
-    'yosys_path', None, 'Path to Yosys executable'
+    'yosys_path', "yosys", 'Path to Yosys executable'
 )
 _STA_PATH = flags.DEFINE_string(
-    'sta_path', None, 'Path to sta/opensta executable'
+    'sta_path', "sta", 'Path to sta/opensta executable'
 )
 _SYNTH_LIBS = flags.DEFINE_string(
     'synth_libs', None, 'Path to synthesis library or libraries'
@@ -115,8 +115,8 @@ def _do_config_task(config: WorkerConfig):
   """Extract configs from args and environment."""
   if config.openroad_path:
     # Expect OpenROAD-flow-scripts to hold tools
-    config.yosys_bin = f'{config.openroad_path}/tools/install/yosys/bin/yosys'
-    config.sta_bin = f'{config.openroad_path}/tools/install/OpenROAD/bin/sta'
+    # config.yosys_bin = f'{config.openroad_path}/tools/install/yosys/bin/yosys'
+    # config.sta_bin = f'{config.openroad_path}/tools/install/OpenROAD/bin/sta'
     config.client_checkpoint_file = (
         f'../../{config.target}_checkpoint.textproto')
   else:

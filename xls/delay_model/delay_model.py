@@ -591,7 +591,6 @@ class LogicalEffortEstimator(Estimator):
 def _estimator_from_proto(op: str, proto: delay_model_pb2.Estimator,
                           data_points: Sequence[delay_model_pb2.DataPoint]):
   """Create an Estimator from a proto."""
-  print(f"op={op} proto={proto} data_points={len(data_points)}")
   if proto.HasField('fixed'):
     assert not data_points
     return FixedEstimator(op, proto.fixed)

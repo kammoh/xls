@@ -252,28 +252,28 @@ LogMessage& LogMessage::operator<<(char (&buf)[SIZE]) {
 // We instantiate these specializations in the library's TU to save space in
 // other TUs.  Since the template is marked `ABSL_ATTRIBUTE_NOINLINE` we will be
 // emitting a function call either way.
-extern template LogMessage& LogMessage::operator<<(const char& v);
-extern template LogMessage& LogMessage::operator<<(const signed char& v);
-extern template LogMessage& LogMessage::operator<<(const unsigned char& v);
-extern template LogMessage& LogMessage::operator<<(const short& v);  // NOLINT
-extern template LogMessage& LogMessage::operator<<(
-    const unsigned short& v);  // NOLINT
-extern template LogMessage& LogMessage::operator<<(const int& v);
-extern template LogMessage& LogMessage::operator<<(const unsigned int& v);
-extern template LogMessage& LogMessage::operator<<(const long& v);  // NOLINT
-extern template LogMessage& LogMessage::operator<<(
-    const unsigned long& v);  // NOLINT
-extern template LogMessage& LogMessage::operator<<(
-    const long long& v);  // NOLINT
-extern template LogMessage& LogMessage::operator<<(
-    const unsigned long long& v);  // NOLINT
-extern template LogMessage& LogMessage::operator<<(void* const& v);
-extern template LogMessage& LogMessage::operator<<(const void* const& v);
-extern template LogMessage& LogMessage::operator<<(const float& v);
-extern template LogMessage& LogMessage::operator<<(const double& v);
-extern template LogMessage& LogMessage::operator<<(const bool& v);
-extern template LogMessage& LogMessage::operator<<(const std::string& v);
-extern template LogMessage& LogMessage::operator<<(const std::string_view& v);
+// extern template LogMessage& LogMessage::operator<<(const char& v);
+// extern template LogMessage& LogMessage::operator<<(const signed char& v);
+// extern template LogMessage& LogMessage::operator<<(const unsigned char& v);
+// extern template LogMessage& LogMessage::operator<<(const short& v);  // NOLINT
+// extern template LogMessage& LogMessage::operator<<(
+//     const unsigned short& v);  // NOLINT
+// extern template LogMessage& LogMessage::operator<<(const int& v);
+// extern template LogMessage& LogMessage::operator<<(const unsigned int& v);
+// extern template LogMessage& LogMessage::operator<<(const long& v);  // NOLINT
+// extern template LogMessage& LogMessage::operator<<(
+//     const unsigned long& v);  // NOLINT
+// extern template LogMessage& LogMessage::operator<<(
+//     const long long& v);  // NOLINT
+// extern template LogMessage& LogMessage::operator<<(
+//     const unsigned long long& v);  // NOLINT
+// // extern template LogMessage& LogMessage::operator<<(void* const& v);
+// extern template LogMessage& LogMessage::operator<<(const void* const& v);
+// extern template LogMessage& LogMessage::operator<<(const float& v);
+// extern template LogMessage& LogMessage::operator<<(const double& v);
+// extern template LogMessage& LogMessage::operator<<(const bool& v);
+// extern template LogMessage& LogMessage::operator<<(const std::string& v);
+// extern template LogMessage& LogMessage::operator<<(const std::string_view& v);
 
 // `LogMessageFatal` ensures the process will exit in failure after logging this
 // message.

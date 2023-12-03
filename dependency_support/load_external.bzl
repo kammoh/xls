@@ -60,8 +60,12 @@ def load_external_repositories():
         # strip_prefix = "abseil-cpp-2fca64174fe9aefe9250bdab1586eb5d69649cca",
         # sha256 = "dcd2ce9ded178843138570c95d796c2a4a5d7ba998e44dc78dc1ea4b390b6b72",
         # urls = ["https://github.com/abseil/abseil-cpp/archive/2fca64174fe9aefe9250bdab1586eb5d69649cca.zip"],
-        urls = ["https://github.com/abseil/abseil-cpp/archive/refs/tags/20230802.1.tar.gz"],
-        strip_prefix = "abseil-cpp-20230802.1",
+        # strip_prefix = "abseil-cpp-2fca64174fe9aefe9250bdab1586eb5d69649cca",
+        # sha256 = "497ebdc3a4885d9209b9bd416e8c3f71e7a1fb8af249f6c2a80b7cbeefcd7e21",
+        urls = ["https://github.com/abseil/abseil-cpp/archive/8028a87c96df0fff5ab58daeec30c43ce6fb0d20.zip"],
+        strip_prefix = "abseil-cpp-8028a87c96df0fff5ab58daeec30c43ce6fb0d20",
+        # sha256 = "6e19ff48bd49b54b55665824a4d62de4c38eb394628484db9917817daca9d2b5",
+        patches = ["@com_google_xls//dependency_support/com_google_absl:ortools_log_macro_redef.patch"],
     )
 
     # Protobuf depends on Skylib

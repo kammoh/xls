@@ -190,7 +190,7 @@ op_samples {
 #  }
   samples {
     result_width: 1
-    operand_widths: 16
+    operand_widths: 1
     operand_widths: 4
     operand_element_counts {
       operand_number: 0
@@ -200,11 +200,40 @@ op_samples {
 
   samples {
     result_width: 2
-    operand_widths: 16
+    operand_widths: 2
     operand_widths: 4
     operand_element_counts {
       operand_number: 0
       element_counts: 16
+    }
+  }
+
+  samples {
+    result_width: 1
+    operand_widths: 1
+    operand_widths: 5
+    operand_element_counts {
+      operand_number: 0
+      element_counts: 32
+    }
+  }
+  samples {
+    result_width: 2
+    operand_widths: 2
+    operand_widths: 5
+    operand_element_counts {
+      operand_number: 0
+      element_counts: 32
+    }
+  }
+
+  samples {
+    result_width: 1
+    operand_widths: 1
+    operand_widths: 6
+    operand_element_counts {
+      operand_number: 0
+      element_counts: 64
     }
   }
 #  samples {

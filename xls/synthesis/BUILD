@@ -88,6 +88,7 @@ py_binary(
         "@com_google_absl_py//absl:app",
         "@com_google_absl_py//absl/flags",
         "@com_google_absl_py//absl/logging",
+        requirement("google-api-python-client"),
     ],
 )
 
@@ -102,6 +103,7 @@ py_binary(
         ":timing_characterization_client",
         "@com_google_absl_py//absl:app",
         "@com_google_absl_py//absl/flags",
+        requirement("google-api-python-client"),
     ],
 )
 
@@ -147,6 +149,7 @@ py_test(
     deps = [
         ":synthesis_py_pb2",
         requirement("portpicker"),
+        requirement("google-api-python-client"),
         "//xls/common:runfiles",
         "@com_google_absl_py//absl/testing:absltest",
         "@com_google_protobuf//:protobuf_python",
@@ -193,6 +196,7 @@ py_library(
         "@com_google_absl_py//absl/flags",
         "@com_google_absl_py//absl/logging",
         "@com_google_protobuf//:protobuf_python",
+        requirement("google-api-python-client"),
     ],
 )
 

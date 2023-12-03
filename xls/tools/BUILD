@@ -785,6 +785,7 @@ cc_binary(
         "//xls/ir:ram_rewrite_cc_proto",
         "//xls/passes:optimization_pass",
         "//xls/passes:pass_base",
+        "@com_google_absl//absl/base",
         "@com_google_absl//absl/status",
         "@com_google_absl//absl/strings:str_format",
     ],

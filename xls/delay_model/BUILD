@@ -353,6 +353,13 @@ xls_delay_model_generation(
     tags = ["manual"],
 )
 
+# xls_delay_model_generation(
+#     name = "ecp5",
+#     samples_file = ":samples_small.textproto",
+#     synthesis_target = "ecp5",
+#     tags = ["manual"],
+# )
+
 # ASAP7 rev28 "current" standard cells (hence do all the corners)
 # Standard cell types
 #  * slvt - Standard cells using super low voltage threshold transistors (fastest but power hungry)
@@ -430,4 +437,5 @@ xls_delay_model_generation(
 
 exports_files([
     "samples.textproto",
+    "samples_small.textproto",
 ])

@@ -438,6 +438,7 @@ template LogMessage& LogMessage::operator<<(const double& v);
 template LogMessage& LogMessage::operator<<(const bool& v);
 template LogMessage& LogMessage::operator<<(const std::string& v);
 template LogMessage& LogMessage::operator<<(const std::string_view& v);
+
 LogMessageFatal::LogMessageFatal(const char* file, int line)
     : LogMessage(file, line, absl::LogSeverity::kFatal) {}
 

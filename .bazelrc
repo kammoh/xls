@@ -38,3 +38,7 @@ try-import %workspace%/fuzztest.bazelrc
 
 # For macOS only:
 build --features=-libtool
+
+build --linkopt "-Wl,-export_dynamic"
+
+build --linkopt "-undefined dynamic_lookup"

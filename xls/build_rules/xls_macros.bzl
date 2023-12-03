@@ -453,8 +453,9 @@ def xls_synthesis_metrics(
 
 def xls_delay_model_generation(
         name,
-        standard_cells,
         samples_file,
+        standard_cells=None,
+        synthesis_target=None,
         **kwargs):
     """Generate an XLS delay model for one PDK corner.
 

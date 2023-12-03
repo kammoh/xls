@@ -24,22 +24,35 @@ fail() {
 }
 
 BASE="//xls/dslx:interpreter_main \
-    //xls/tools:repl \
     //xls/dslx/lsp:dslx_ls \
     //xls/dslx:dslx_fmt \
     //xls/dslx:highlight_main \
     //xls/dslx/ir_convert:ir_converter_main \
     //xls/dslx/type_system:typecheck_main \
+    //xls/tools:repl \
     //xls/tools:opt_main \
     //xls/tools:codegen_main \
     //xls/tools:wrap_io_main \
     //xls/tools:proto_to_dslx_main \
     //xls/tools:extract_stage_main \
     //xls/tools:delay_info_main \
+    //xls/tools:solver \
     //xls/tools:smtlib_emitter_main \
     //xls/tools:lec_main \
     //xls/tools:benchmark_main \
+    //xls/tools:delay_model_stats \
+    //xls/tools:package_bazel_build \
+    //xls/tools:eval_dslx_main \
+	//xls/tools:eval_proc_main \
+	//xls/tools:eval_ir_main \
+    //xls/tools:check_ir_equivalence_main \
+    //xls/tools:booleanify_main \
+    //xls/tools:benchmark_codegen_main \
+    //xls/tools:netlist_interpreter_main \
+    //xls/tools:ir_stats_main \
     //xls/synthesis/yosys:yosys_server_main \
+    //xls/synthesis:synthesis_client_main \
+    //xls/synthesis:timing_characterization_client_main \
     //xls/visualization/...
 "
 
@@ -92,19 +105,19 @@ bazel-bin/xls/tools/package_bazel_build --output_dir $PREFIX/share \
 					--inc_target xls/tools/lec_main \
 					--inc_target xls/tools/benchmark_main \
                     --inc_target xls/synthesis/yosys/yosys_server_main \
+					--inc_target xls/tools/eval_dslx_main \
+					--inc_target xls/tools/eval_proc_main \
+					--inc_target xls/tools/eval_ir_main \
+					--inc_target xls/tools/check_ir_equivalence_main \
+					--inc_target xls/tools/booleanify_main \
+					--inc_target xls/tools/benchmark_codegen_main \
+					--inc_target xls/tools/ir_stats_main \
+					--inc_target xls/tools/netlist_interpreter_main \
 
 
 					# --inc_target xls/dslx/strip_comments_main \
 					# --inc_target xls/tools/simulate_module_main \
 					# --inc_target xls/dslx/cpp_transpiler/cpp_transpiler_main \
-					# --inc_target xls/tools/eval_dslx_main \
-					# --inc_target xls/tools/eval_proc_main \
-					# --inc_target xls/tools/eval_ir_main \
-					# --inc_target xls/tools/booleanify_main \
-					# --inc_target xls/tools/benchmark_codegen_main \
-					# --inc_target xls/tools/netlist_interpreter_main \
-					# --inc_target xls/tools/check_ir_equivalence_main \
-					# --inc_target xls/tools/ir_stats_main \
 					# --inc_target xls/tools/drpc_main \
                     # --inc_target xls/contrib/xlscc/xlscc \
 
