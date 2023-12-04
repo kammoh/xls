@@ -263,6 +263,9 @@ absl::Status YosysSynthesisServiceImpl::RunNextPNR(
     nextpnr_args.push_back("--hx8k");
     nextpnr_args.push_back("--package");
     nextpnr_args.push_back("ct256");
+  } else if (synthesis_target_ == "xilinx") {
+    nextpnr_args.push_back("--chipdb");
+    nextpnr_args.push_back("/Volumes/src/f4pga/nextpnr-xilinx/chipdb-out1/xc7a200tffg1156-3.bin");
   }
 
   if (request->has_target_frequency_hz()) {

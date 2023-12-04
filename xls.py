@@ -10,6 +10,15 @@ from pathlib import Path
 import subprocess
 from typing import Any, Optional
 
+# get full path to this script
+import os
+import sys
+import inspect
+
+# get full path to this script
+script_path = Path(os.path.abspath(inspect.getfile(inspect.currentframe()))).parent
+
+
 tool_path_map = {
     "ir_converter": "dslx/ir_convert/ir_converter_main",
     "opt": "tools/opt_main",
@@ -21,12 +30,12 @@ tool_path_map = {
 def run_command(command: str, args: list, stdout: Optional[Path | str] = None, use_bazel=False):
     """Run a command with arguments."""
     [cmd_path, cmd_target] = tool_path_map[command].rsplit("/", 1)
-    args = [str(arg) for arg in args]
     if use_bazel:
         cmd = ["bazel", "run", "-c", "opt", f"//xls/{cmd_path}:{cmd_target}", "--"]
     else:
-        cmd = [f"./bazel-bin/xls/{cmd_path}/{cmd_target}"]
+        cmd = [script_path / f"bazel-bin/xls/{cmd_path}/{cmd_target}"]
     cmd += args
+    cmd = [str(arg) for arg in cmd]
     print("Running command: " + " ".join(cmd))
     if stdout is not None:
         print(f"Writing stdout to {stdout}")
@@ -95,6 +104,7 @@ def run(args, settings: dict[str, dict[str, Any]]):
         print(f"Unknown action: {args.action}")
         exit(1)
 
+
 # dataclass for settings
 @dataclass
 class Settings:
@@ -131,11 +141,11 @@ def main():
     )
     # top module
     parser.add_argument(
-        "top",
+        "-t",
+        "--top",
         type=str,
-        nargs="?",
-        help="top module",
         default="main",
+        help="top module",
     )
     parser.add_argument(
         "-s",
@@ -149,7 +159,7 @@ def main():
         "-d",
         "--delay_model",
         type=str,
-    #     choices=["unit", "sky130", "asap7", "ecp5"]
+        #     choices=["unit", "sky130", "asap7", "ecp5"]
         default="unit",
     )
     parser.add_argument(
