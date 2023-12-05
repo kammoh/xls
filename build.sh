@@ -81,8 +81,8 @@ BIN_DIR=$PREFIX/bin
 # create tools symlinks
 [ -d "$BIN_DIR" ] || mkdir -p "$BIN_DIR" || fail
 
-pushd $PREFIX
-BINS=$(ls share/xls/dslx/*_main share/xls/tools/*_main)
+pushd $PREFIX/share
+BINS=$(ls xls/dslx/*_main xls/dslx/*/*_main xls/tools/*_main)
 popd
 
 for f in $BINS \
