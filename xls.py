@@ -12,7 +12,9 @@ from pathlib import Path
 import shutil
 import subprocess
 from types import UnionType
-from typing import Any, Callable, Optional
+from typing import Any, Callable
+import sys
+
 
 # get full path to this script
 import os
@@ -92,7 +94,9 @@ def find_executable(name: str, priority_paths=None, alt_paths=None) -> str | Non
         return shutil.which(name, path=alt_paths)
     return None
 
+
 logger = logging.getLogger(__name__)
+
 
 @dataclass
 class Generator:
@@ -106,26 +110,32 @@ class Generator:
         for field in dataclasses.fields(self):
             value = getattr(self, field.name)
             required_type = field.type
-            logger.debug(
-                f"field: {field.name} type: {required_type} origin:{typing.get_origin(required_type)}"
-            )
+            # logger.debug(
+            #     f"field: {field.name} type: {required_type} origin:{typing.get_origin(required_type)}"
+            # )
+            convert_type = required_type
             if typing.get_origin(required_type) == UnionType:
                 required_type = typing.get_args(required_type)
+                assert isinstance(required_type, tuple)
+                convert_type = required_type[0]
             elif hasattr(required_type, "__origin__"):
                 required_type = required_type.__origin__
 
             logger.debug(
-                f"name: {field.name} value: {value} required type: {required_type} ({type(required_type)}) provided type: {type(value)} "
+                "name: %s value: %s required type: %s (%s) provided type: %s",
+                field.name,
+                value,
+                required_type,
+                type(required_type),
+                type(value),
             )
             if value is not None and not isinstance(value, required_type):
-                if isinstance(required_type, tuple):
-                    required_type = required_type[0]
                 if isinstance(value, str) and isinstance(
                     required_type, (int, bool, float, Callable)
                 ):
                     logger.debug(f"Converting {field.name} from {type(value)} to {required_type}")
                     try:
-                        value = required_type(value)
+                        value = convert_type(value)
                         setattr(self, field.name, value)
                         return
                     except ValueError:
@@ -254,8 +264,8 @@ class Codegen(XlsGenerator):
 
         if self.output_verilog_path is None:
             suffix = ".sv" if self.use_system_verilog else ".v"
-            verilog_out = Path(Path(self._srcs[-1]).stem).with_suffix(suffix)
-            self.output_verilog_path = str(verilog_out)
+            p = Path(self._srcs[-1])
+            self.output_verilog_path = str(p.with_stem(p.stem.split(".", 1)[0]).with_suffix(suffix))
 
     def _generate(self):
         def fmt_val(v):
@@ -265,6 +275,113 @@ class Codegen(XlsGenerator):
             args = self._srcs + [f"--{k}={fmt_val(v)}" for k, v in self.settings().items()]
             assert self._exec_path is not None
             run_executable(self._exec_path, args)
+
+
+__HAS_VARNAME__: bool | None = None
+
+
+def get_argname(up_name: str):
+    global __HAS_VARNAME__  # pylint: disable=global-statement
+    if __HAS_VARNAME__ is None:
+        try:
+            from varname import argname  # pylint: disable=import-outside-toplevel
+
+            print(f"{'varname' in sys.modules}")
+            print(f"{'argname' in sys.modules}")
+            __HAS_VARNAME__ = True
+        except ImportError:
+            __HAS_VARNAME__ = False
+    return argname(up_name, frame=2) if __HAS_VARNAME__ else up_name  # type: ignore
+
+
+def fail(msg: str):
+    """Fail with a message."""
+    raise RunError(msg)
+
+
+def enforce_type(expected_type, value, none_ok=True):
+    """Enforce a type."""
+    if value is None and none_ok:
+        return value
+    convert_type = expected_type
+    if typing.get_origin(expected_type) == UnionType:
+        expected_type = typing.get_args(expected_type)
+        assert isinstance(expected_type, tuple)
+        convert_type = expected_type[0]
+    if not isinstance(value, expected_type):
+        if isinstance(convert_type, (bool, int, float)):
+            value = convert_type(value)  # type: ignore
+        else:
+            fail(f"Expected {get_argname('value')} to be {expected_type}, got {repr(value)}")
+    return value
+
+
+def get_mangled_ir_symbol(
+    module_name, function_name, parametric_values=None, is_implicit_token=False, is_proc_next=False
+):
+    """Returns the mangled IR symbol for the module/function combination.
+
+    "Mangling" is the process of turning nicely namedspaced symbols into
+    "grosser" (mangled) flat (non hierarchical) symbol, e.g. that lives on a
+    package after IR conversion. To retrieve/execute functions that have been IR
+    converted, we use their mangled names to refer to them in the IR namespace.
+
+    Args:
+      module_name: The DSLX module name that the function is within.
+      function_name: The DSLX function name within the module.
+      parametric_values: Any parametric values used for instantiation (e.g. for
+        a parametric entry point that is known to be instantiated in the IR
+        converted module). This is generally for more advanced use cases like
+        internals testing. The argument is mutually exclusive with argument
+        'is_proc_next'.
+      is_implicit_token: A boolean flag denoting whether the symbol contains an
+        implicit token. The argument is mutually exclusive with argument
+        'is_proc_next'.
+      is_proc_next: A boolean flag denoting whether the symbol is a
+        next proc function. The argument is mutually exclusive with arguments:
+        'parametric_values' and 'is_implicit_token'.
+
+    Returns:
+      The "mangled" symbol string.
+    """
+
+    # Type validation for optional inputs.
+    parametric_values = enforce_type(list | tuple, parametric_values)
+    is_implicit_token = enforce_type(bool, is_implicit_token)
+    is_proc_next = enforce_type(bool, is_proc_next)
+
+    print(f"parametric_values: {parametric_values}")
+
+    # Presence validation for optional inputs.
+    if is_proc_next and (parametric_values or is_implicit_token):
+        fail(
+            "Argument 'is_proc_next' is mutually exclusive with arguments: 'parametric_values' and 'is_implicit_token'."
+        )
+
+    prefix_str = ""
+    if is_implicit_token:
+        prefix_str = "itok__"
+
+    suffix = ""
+
+    if parametric_values:
+        suffix = "__" + "_".join(
+            [str(v) for v in parametric_values],
+        )
+
+    mangled_name = "__{}{}__{}{}".format(
+        prefix_str,
+        module_name,
+        function_name,
+        suffix,
+    )
+
+    if is_proc_next:
+        mangled_name = mangled_name.replace(":", "_")
+        mangled_name = mangled_name.replace("->", "__")
+        mangled_name = mangled_name + "_0_next"
+
+    return mangled_name
 
 
 @dataclass
@@ -278,6 +395,19 @@ class OptIr(XlsGenerator):
     top: String = None
     ir_dump_path: String = None
     output_ir_path: String = None
+    run_only_passes: list[str] | str | None = None
+    skip_passes: list[str] | str | None = None
+    opt_level: Int = None
+    ram_rewrites_pb: String = None  # Path to protobuf describing ram rewrites; default: ""
+
+    #  If specified, convert array indexes with
+    # fewer than or equal to the given number of possible indices (by range
+    # analysis) into chains of selects. Otherwise, this optimization is skipped,
+    # since it can sometimes reduce output quality.); default: -1
+    convert_array_index_to_select: Int = None
+
+    inline_procs: Bool = None
+    use_context_narrowing_analysis: Bool = None
 
     def _phoney(self):
         return super()._phoney() + ["output_ir_path"]
@@ -286,6 +416,10 @@ class OptIr(XlsGenerator):
         assert self._srcs, "No input files specified"
         for src in self._srcs:
             assert Path(src).exists(), f"Input file {src} does not exist"
+        if isinstance(self.run_only_passes, list):
+            self.run_only_passes = ":".join(self.run_only_passes)
+        if isinstance(self.skip_passes, list):
+            self.skip_passes = ":".join(self.skip_passes)
 
         if self.output_ir_path is None:
             verilog_out = Path(self._srcs[-1]).with_suffix(".opt.ir")
@@ -370,6 +504,7 @@ def run(args, settings: dict[str, dict[str, Any]]):
     if args.action == "gen":
         ir_converter = IrConverter(
             _srcs=args.input,
+            _force_run=args.force,
             **get_settings("ir_converter"),
         )
         ir_converter.run()
@@ -377,12 +512,14 @@ def run(args, settings: dict[str, dict[str, Any]]):
 
         opt_ir = OptIr(
             _srcs=[ir_converter.output_ir_path],
+            _force_run=args.force,
             **get_settings("opt"),
         )
         opt_ir.run()
         assert opt_ir.output_ir_path
         Codegen(
             _srcs=[opt_ir.output_ir_path],
+            _force_run=args.force,
             **get_settings("codegen"),
         ).run()
 
@@ -391,15 +528,6 @@ def run(args, settings: dict[str, dict[str, Any]]):
     else:
         print(f"Unknown action: {args.action}")
         exit(1)
-
-
-# dataclass for settings
-@dataclass
-class Settings:
-    """Settings for a tool."""
-
-    pipeline_stages: int = 1
-    delay_model: str = "unit"
 
 
 def set_if_not_exists(d: dict, k: str, v: Any):
@@ -424,6 +552,14 @@ def merge_hierarchical_dicts(d1: dict, d2: dict) -> dict:
         if k not in d1:
             ret[k] = v
     return ret
+
+
+def path_stem(path: str | Path) -> str:
+    """Get the stem of a path."""
+    if isinstance(path, Path):
+        return path.stem
+    else:
+        return os.path.basename(path).split(os.path.extsep, 1)[0]
 
 
 # get command line arguments
@@ -455,6 +591,13 @@ def main():
         help="top module",
     )
     parser.add_argument(
+        "-n",
+        "--top_proc_next",
+        action="store_true",
+        default=False,
+        help="top module",
+    )
+    parser.add_argument(
         "-s",
         "--settings",
         metavar="settings",
@@ -473,7 +616,7 @@ def main():
         "-p",
         "--pipeline_stages",
         type=int,
-        default=0,  # 0: combinational
+        default=None,
     )
     parser.add_argument(
         "-o",
@@ -487,11 +630,51 @@ def main():
         action="store_true",
         help="print verbose output",
     )
+    parser.add_argument(
+        "-f",
+        "--force",
+        action="store_true",
+        help="force execution of all commands",
+    )
+    parser.add_argument(
+        "-c",
+        "--clean",
+        action="store_true",
+        help="clean output files before running",
+    )
+    parser.add_argument(
+        "-m",
+        "--module",
+        type=str,
+        default=None,
+        help="module name",
+    )
+    parser.add_argument(
+        "--params",
+        type=str,
+        nargs="+",
+        help="list of parametric values",
+    )
     # get remainder unparsed arguments as a list
     # args, argv = parser.parse_known_args()
     args = parser.parse_args()
     ss = kvlist_to_dict(args.settings)
-    set_if_not_exists(ss, "codegen", {})
+    opt_top = get_mangled_ir_symbol(
+        args.module or path_stem(args.input[-1]),
+        args.top,
+        parametric_values=args.params,
+        is_proc_next=args.top_proc_next,
+    )
+    print(f"opt_top: {opt_top}")
+    ss = merge_hierarchical_dicts(
+        {
+            "ir_converter": {"top": args.top},
+            "opt": {"top": opt_top},
+            "codegen": {"pipeline_stages": args.pipeline_stages, "delay_model": args.delay_model},
+        },
+        ss,
+    )
+
     run(args, ss)
 
 
