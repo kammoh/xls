@@ -24,7 +24,7 @@ fail() {
   exit 1
 }
 
-BINARIES_SET="xls/dslx/... xls/tools/... xls/netlist/... xls/fuzzer/... xls/contrib/xlscc:cc_parser xls/contrib/xlscc:translator xls/uncore_rtl/... //xls/visualization/..."
+BINARIES_SET="xls/dslx/... xls/tools/... xls/netlist/... //xls/visualization/..."
 BINARIES=( $(bazel query 'kind("cc_binary", set(' ${BINARIES_SET} '))') )
 
 echo "BINARIES: ${BINARIES[@]}"

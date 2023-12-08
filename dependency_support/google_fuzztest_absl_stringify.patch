@@ -1,0 +1,42 @@
+Common subdirectories: fuzztest.orig/internal/domains and fuzztest/internal/domains
+diff --color=never -U8 fuzztest.orig/internal/type_support.h fuzztest/internal/type_support.h
+--- fuzztest.orig/internal/type_support.h	2023-12-08 02:10:04
++++ fuzztest/internal/type_support.h	2023-12-08 02:11:16
+@@ -23,17 +23,17 @@
+ #include <string_view>
+ #include <tuple>
+ #include <type_traits>
+ #include <utility>
+ 
+ #include "absl/debugging/symbolize.h"
+ #include "absl/numeric/int128.h"
+ #include "absl/strings/escaping.h"
+-#include "absl/strings/has_absl_stringify.h"
++#include "absl/strings/internal/has_absl_stringify.h"
+ #include "absl/strings/match.h"
+ #include "absl/strings/str_format.h"
+ #include "absl/strings/string_view.h"
+ #include "absl/strings/strip.h"
+ #include "absl/time/time.h"
+ #include "./fuzztest/internal/domains/absl_helpers.h"
+ #include "./fuzztest/internal/meta.h"
+ 
+@@ -82,17 +82,17 @@
+   absl::ConsumeSuffix(&v, "]");
+   return v;
+ #else
+   return "<TYPE>";
+ #endif
+ }
+ 
+ template <typename T>
+-inline constexpr bool has_absl_stringify_v = absl::HasAbslStringify<T>::value;
++inline constexpr bool has_absl_stringify_v = absl::strings_internal::HasAbslStringify<T>::value;
+ 
+ using RawSink = absl::FormatRawSink;
+ 
+ enum class PrintMode { kHumanReadable, kSourceCode };
+ 
+ // Invokes PrintCorpusValue or PrintUserValue from the domain's type printer,
+ // depending on what's available.
+ // It will automatically call GetValue if needed for the PrintUserValue call. It

@@ -45,12 +45,15 @@ def load_external_repositories():
         strip_prefix = "rules_cc-0.0.5",
     )
 
-    # V 1.14.0 (released 2023-08-02)
+    # was: V 1.14.0 (released 2023-08-02)
+    # kamyar: master (2023-12-08) to fix compilation
     http_archive(
         name = "com_google_googletest",
-        urls = ["https://github.com/google/googletest/archive/76bb2afb8b522d24496ad1c757a49784fbfa2e42.zip"],
-        strip_prefix = "googletest-76bb2afb8b522d24496ad1c757a49784fbfa2e42",
-        sha256 = "c8c5fb6bf567995cb5ea5c088c2fbaca6430aebd8173dd7161975cd32cbe0bda",
+        urls = ["https://github.com/google/googletest/archive/b3a9ba2b8e975550799838332803d468797ae2e1.zip"],
+        strip_prefix = "googletest-b3a9ba2b8e975550799838332803d468797ae2e1",
+        patches = ["@com_google_xls//dependency_support:googletest_absl_stringify.patch"],
+        patch_args = ["-p0"],
+        # sha256 = "c8c5fb6bf567995cb5ea5c088c2fbaca6430aebd8173dd7161975cd32cbe0bda",
     )
 
     # LTS 20230802.1 (released 2023-09-18)
@@ -60,8 +63,8 @@ def load_external_repositories():
         strip_prefix = "abseil-cpp-20230802.1",
         # sha256 = "6e19ff48bd49b54b55665824a4d62de4c38eb394628484db9917817daca9d2b5",
         patches = [
-            "@com_google_ortools//patches:abseil-cpp-20230802.1.patch",
-            "@com_google_xls//dependency_support/com_google_absl:ortools_log_macro_redef.patch"
+            # "@com_google_ortools//patches:abseil-cpp-20230802.1.patch",
+            # "@com_google_xls//dependency_support/com_google_absl:ortools_log_macro_redef.patch"
         ],
     )
 
@@ -114,7 +117,7 @@ def load_external_repositories():
         name = "com_google_absl_py",
         strip_prefix = "abseil-py-2.0.0",
         urls = ["https://github.com/abseil/abseil-py/archive/refs/tags/v2.0.0.tar.gz"],
-        sha256 = "2ab7ce101db02d7a1de48f8157cbd978f00a19bad44828fd213aa69fe352497d",
+        # sha256 = "2ab7ce101db02d7a1de48f8157cbd978f00a19bad44828fd213aa69fe352497d",
     )
 
     http_archive(
@@ -241,13 +244,16 @@ def load_external_repositories():
         strip_prefix = "benchmark-1.7.0",
     )
 
-    # Updated 2023-11-29; latest version
-    FUZZTEST_COMMIT = "231ecb9f4606adee57f1611f18dcee500e927eee"
+    # Updated 2023-12-08; latest version
+    FUZZTEST_COMMIT = "b92caa9074dc068a0469063137abcc2cf736641c"
     http_archive(
         name = "com_google_fuzztest",
         strip_prefix = "fuzztest-" + FUZZTEST_COMMIT,
         url = "https://github.com/google/fuzztest/archive/" + FUZZTEST_COMMIT + ".zip",
-        sha256 = "bbdefcec894c18fb22ac8a97ca5a0547cb38f00ad0685c4045154dc381102da8",
+        patches = [
+            "@com_google_xls//dependency_support:google_fuzztest_absl_stringify.patch",
+        ],
+        # sha256 = "bbdefcec894c18fb22ac8a97ca5a0547cb38f00ad0685c4045154dc381102da8",
     )
 
     # Updated 2023-2-1

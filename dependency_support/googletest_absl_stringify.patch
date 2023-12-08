@@ -1,0 +1,52 @@
+diff -u googletest/include/gtest.orig/gtest-message.h googletest/include/gtest/gtest-message.h
+--- googletest/include/gtest.orig/gtest-message.h	2023-12-08 02:41:48
++++ googletest/include/gtest/gtest-message.h	2023-12-08 02:42:18
+@@ -59,7 +59,7 @@
+ #ifdef GTEST_HAS_ABSL
+ #include <type_traits>
+ 
+-#include "absl/strings/has_absl_stringify.h"
++#include "absl/strings/internal/has_absl_stringify.h"
+ #include "absl/strings/str_cat.h"
+ #endif  // GTEST_HAS_ABSL
+ 
+@@ -125,7 +125,7 @@
+       typename T
+ #ifdef GTEST_HAS_ABSL
+       ,
+-      typename std::enable_if<!absl::HasAbslStringify<T>::value,  // NOLINT
++      typename std::enable_if<!absl::strings_internal::HasAbslStringify<T>::value,  // NOLINT
+                               int>::type = 0
+ #endif  // GTEST_HAS_ABSL
+       >
+@@ -153,7 +153,7 @@
+   // Streams a non-pointer value with an AbslStringify definition to this
+   // object.
+   template <typename T,
+-            typename std::enable_if<absl::HasAbslStringify<T>::value,  // NOLINT
++            typename std::enable_if<absl::strings_internal::HasAbslStringify<T>::value,  // NOLINT
+                                     int>::type = 0>
+   inline Message& operator<<(const T& val) {
+     // ::operator<< is needed here for a similar reason as with the non-Abseil
+diff -u googletest/include/gtest.orig/gtest-printers.h googletest/include/gtest/gtest-printers.h
+--- googletest/include/gtest.orig/gtest-printers.h	2023-12-08 02:41:48
++++ googletest/include/gtest/gtest-printers.h	2023-12-08 02:41:59
+@@ -116,7 +116,7 @@
+ #include <vector>
+ 
+ #ifdef GTEST_HAS_ABSL
+-#include "absl/strings/has_absl_stringify.h"
++#include "absl/strings/internal/has_absl_stringify.h"
+ #include "absl/strings/str_cat.h"
+ #endif  // GTEST_HAS_ABSL
+ #include "gtest/internal/gtest-internal.h"
+@@ -294,7 +294,7 @@
+ struct ConvertibleToAbslStringifyPrinter {
+   template <typename T,
+             typename = typename std::enable_if<
+-                absl::HasAbslStringify<T>::value>::type>  // NOLINT
++                absl::strings_internal::HasAbslStringify<T>::value>::type>  // NOLINT
+   static void PrintValue(const T& value, ::std::ostream* os) {
+     *os << absl::StrCat(value);
+   }
+Common subdirectories: googletest/include/gtest.orig/internal and googletest/include/gtest/internal

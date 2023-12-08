@@ -34,13 +34,13 @@ static absl::LogSeverityAtLeast NormalizedSeverity(int parameter) {
   return static_cast<absl::LogSeverityAtLeast>(parameter);
 }
 
-// absl::LogSeverityAtLeast StderrThreshold() {
-//   if (absl::GetFlag(FLAGS_logtostderr) ||
-//       absl::GetFlag(FLAGS_alsologtostderr)) {
-//     return absl::LogSeverityAtLeast::kInfo;
-//   } else {
-//     return NormalizedSeverity(absl::GetFlag(FLAGS_stderrthreshold));
-//   }
-// }
+absl::LogSeverityAtLeast StderrThreshold() {
+  if (absl::GetFlag(FLAGS_logtostderr) ||
+      absl::GetFlag(FLAGS_alsologtostderr)) {
+    return absl::LogSeverityAtLeast::kInfo;
+  } else {
+    return NormalizedSeverity(absl::GetFlag(FLAGS_stderrthreshold));
+  }
+}
 
 }  // namespace absl
