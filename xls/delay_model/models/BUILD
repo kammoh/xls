@@ -31,6 +31,7 @@ cc_library(
         ":model_asap7",
         ":model_sky130",
         ":model_ecp5",
+        ":model_xc7",
         ":model_unit",  # build_cleaner: keep
     ],
 )
@@ -60,5 +61,12 @@ delay_model(
     name = "model_ecp5",
     srcs = ["ecp5.textproto"],
     model_name = "ecp5",
+    precedence = "kMedium",
+)
+
+delay_model(
+    name = "model_xc7",
+    srcs = ["xc7.textproto"],
+    model_name = "xilinx",
     precedence = "kMedium",
 )

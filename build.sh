@@ -24,8 +24,10 @@ fail() {
   exit 1
 }
 
+BINARIES_SET="xls/dslx/... xls/tools/... xls/netlist/... xls/fuzzer/... xls/contrib/xlscc:cc_parser xls/contrib/xlscc:translator xls/uncore_rtl/... //xls/visualization/..."
+BINARIES=( $(bazel query 'kind("cc_binary", set(' ${BINARIES_SET} '))') )
 
-BINARIES=($(bazel query 'kind("cc_binary", set(xls/dslx/... xls/tools/... xls/netlist/... xls/fuzzer/... xls/contrib/xlscc:cc_parser xls/contrib/xlscc:translator xls/uncore_rtl/... //xls/visualization/... ) )'))
+echo "BINARIES: ${BINARIES[@]}"
 
 BINARIES+=( //xls/synthesis/yosys:yosys_server_main
   //xls/synthesis:synthesis_client_main
@@ -44,27 +46,13 @@ BUILD_TARGETS=( ${BINARIES[@]} ${STDLIB[@]} ${MODULES[@]} //xls/visualization/..
 echo "BUILD_TARGETS: ${BUILD_TARGETS[@]}"
 
 # EXTRA="//xls/tools/... \
-#     //xls/scheduling/... \
-#     //xls/codegen/... \
-#     //xls/interpreter/... \
 #     //xls/dslx/... \
 #     -//xls/dslx/stdlib:float32_add_cc -//xls/dslx/stdlib:float32_add_cc_gen_aot \
 #     -//xls/dslx/stdlib:float32_fma_cc -//xls/dslx/stdlib:float32_fma_cc_gen_aot \
-#     //xls/fuzzer/... \
-#     //xls/netlist/... \
-#     //xls/contrib/xlscc:xlscc \
-#     //xls/solvers/... \
-#     //xls/uncore_rtl/... \
-#     //xls/synthesis/yosys/... \
 #     //xls/modules/... \
 #     -//xls/modules/aes:aes_test -//xls/modules/aes:aes_encrypt_cc -//xls/modules/aes:aes_decrypt_cc \
 #     //xls/modules/aes:aes_dslx //xls/modules/aes:aes_ctr //xls/modules/aes:aes_ghash //xls/modules/aes:aes_gcm
 # "
-
-# -//xls/modules/aes/...
-
-# [ -z $JOBS ] && JOBS=$(nproc) #  --jobs=$JOBS
-# --spawn_strategy=standalone -s
 
 bazel build -c opt --verbose_failures --sandbox_debug -- ${BUILD_TARGETS[@]} || fail
 
@@ -94,6 +82,7 @@ for f in $BINS \
   echo "$BIN_DIR/$(basename $f) --> $PREFIX/share/$f"
 done
 
+[ -f $PWD/inst ] && rm $PWD/inst
 ln -sf $PREFIX $PWD/inst || fail
 
 echo "Build completed. Please add $BIN_DIR to PATH to use XLS tools"

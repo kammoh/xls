@@ -98,6 +98,12 @@ def find_executable(name: str, priority_paths=None, alt_paths=None) -> str | Non
 logger = logging.getLogger(__name__)
 
 
+def type_remove_generics(typ):
+    if hasattr(typ, "__origin__"):
+        typ = typ.__origin__
+    return typ
+
+
 @dataclass
 class Generator:
     """Base class for generators."""
@@ -114,13 +120,15 @@ class Generator:
             #     f"field: {field.name} type: {required_type} origin:{typing.get_origin(required_type)}"
             # )
             convert_type = required_type
-            if typing.get_origin(required_type) == UnionType:
+
+            while typing.get_origin(required_type) == UnionType:
                 required_type = typing.get_args(required_type)
                 assert isinstance(required_type, tuple)
-                convert_type = required_type[0]
-            elif hasattr(required_type, "__origin__"):
-                required_type = required_type.__origin__
+                required_type = tuple(type_remove_generics(t) for t in required_type)
+                # print(f"required_type={required_type}")
+                convert_type = type_remove_generics(required_type[0])
 
+            required_type = type_remove_generics(required_type)
             logger.debug(
                 "name: %s value: %s required type: %s (%s) provided type: %s",
                 field.name,
@@ -129,11 +137,11 @@ class Generator:
                 type(required_type),
                 type(value),
             )
+            # print(f"required_type={required_type}")
             if value is not None and not isinstance(value, required_type):
-                if isinstance(value, str) and isinstance(
-                    required_type, (int, bool, float, Callable)
-                ):
-                    logger.debug(f"Converting {field.name} from {type(value)} to {required_type}")
+                # print(f"required_type={required_type}")
+                if isinstance(value, str) and convert_type in (int, bool, float, Callable):
+                    logger.info(f"Converting {field.name} from {type(value)} to {convert_type}")
                     try:
                         value = convert_type(value)
                         setattr(self, field.name, value)
@@ -141,7 +149,8 @@ class Generator:
                     except ValueError:
                         pass
                 raise ValueError(
-                    f"Expected {field.name} to be {required_type}, " f"got {repr(value)}"
+                    f"Expected {field.name} to be {required_type}, "
+                    f"got {repr(value)} ({type(value)})",
                 )
 
     def _phoney(self):
@@ -171,7 +180,7 @@ class Generator:
         return self._force_run or should_run(self._srcs, artifacts)
 
 
-String = str | None
+Str = str | None
 Int = int | None
 Float = float | None
 Bool = bool | None
@@ -186,26 +195,26 @@ class XlsGenerator(Generator):
 class Codegen(XlsGenerator):
     """generates verilog from XLS IR."""
 
-    top: String = None
-    generator: String = None
+    top: Str = None
+    generator: Str = None
     pipeline_stages: Int = None
 
-    input_valid_signal: String = None
-    output_valid_signal: String = None
-    manual_load_enable_signal: String = None
-    flop_inputs_kind: String = None
-    flop_outputs_kind: String = None
-    module_name: String = None
-    reset: String = None
-    gate_format: String = None
-    assert_format: String = None
-    smulp_format: String = None
-    umulp_format: String = None
-    ram_configurations: String = None
+    input_valid_signal: Str = None
+    output_valid_signal: Str = None
+    manual_load_enable_signal: Str = None
+    flop_inputs_kind: Str = None
+    flop_outputs_kind: Str = None
+    module_name: Str = None
+    reset: Str = None
+    gate_format: Str = None
+    assert_format: Str = None
+    smulp_format: Str = None
+    umulp_format: Str = None
+    ram_configurations: Str = None
     gate_recvs: Bool = None
     array_index_bounds_checking: Bool = None
     clock_period_ps: Int = None
-    # # =============== scheduling: =================
+    # # =============== scheduling: clock_margin_percent=================
     clock_margin_percent: Int = None
     period_relaxation_percent: Int = None
     worst_case_throughput: Int = None
@@ -220,13 +229,13 @@ class Codegen(XlsGenerator):
     fdo_delay_driven_path_number: Int = None
     fdo_fanout_driven_path_number: Int = None
     fdo_refinement_stochastic_ratio: Float = None
-    fdo_path_evaluate_strategy: String = None
-    fdo_synthesizer_name: String = None
-    fdo_yosys_path: String = None
-    fdo_sta_path: String = None
-    fdo_synthesis_libraries: String = None
+    fdo_path_evaluate_strategy: Str = None
+    fdo_synthesizer_name: Str = None
+    fdo_yosys_path: Str = None
+    fdo_sta_path: Str = None
+    fdo_synthesis_libraries: Str = None
 
-    output_verilog_path: String = None
+    output_verilog_path: Str = None
 
     minimize_clock_on_failure: Bool = None
     flop_single_value_channels: Bool = None
@@ -236,8 +245,13 @@ class Codegen(XlsGenerator):
     reset_data_path: Bool = None
     separate_lines: Bool = None
 
-    delay_model: str = "unit"
-    output_verilog_line_map_path: String = None
+    delay_model: str = "unitq/"
+    scheduling_options_proto: Str = None
+    output_verilog_line_map_path: Str = None
+    output_signature_path: Str = None
+    output_schedule_path: Str = None
+    output_schedule_ir_path: Str = None
+    output_block_ir_path: Str = None
 
     flop_inputs: bool = True
     flop_outputs: bool = True
@@ -246,6 +260,11 @@ class Codegen(XlsGenerator):
     streaming_channel_ready_suffix: str = "_ready"
 
     use_system_verilog: bool = True
+
+    infeasible_per_state_backedge_slack_pool: Int = None
+
+    glop_params: Str = None
+
 
     _exec_path: str | Path | None = find_executable(
         "codegen_main", priority_paths=[SCRIPT_DIR / "bazel-bin/xls/tools"]
@@ -350,8 +369,6 @@ def get_mangled_ir_symbol(
     is_implicit_token = enforce_type(bool, is_implicit_token)
     is_proc_next = enforce_type(bool, is_proc_next)
 
-    print(f"parametric_values: {parametric_values}")
-
     # Presence validation for optional inputs.
     if is_proc_next and (parametric_values or is_implicit_token):
         fail(
@@ -392,13 +409,13 @@ class OptIr(XlsGenerator):
         "opt_main", priority_paths=[SCRIPT_DIR / "bazel-bin/xls/tools"]
     )
 
-    top: String = None
-    ir_dump_path: String = None
-    output_ir_path: String = None
+    top: Str = None
+    ir_dump_path: Str = None
+    output_ir_path: Str = None
     run_only_passes: list[str] | str | None = None
     skip_passes: list[str] | str | None = None
     opt_level: Int = None
-    ram_rewrites_pb: String = None  # Path to protobuf describing ram rewrites; default: ""
+    ram_rewrites_pb: Str = None  # Path to protobuf describing ram rewrites; default: ""
 
     #  If specified, convert array indexes with
     # fewer than or equal to the given number of possible indices (by range
@@ -446,12 +463,12 @@ class IrConverter(XlsGenerator):
         priority_paths=[SCRIPT_DIR / "bazel-bin/xls/dslx/ir_convert"],
     )
 
-    top: String = None
-    package_name: String = None
-    # ir_dump_path: String = None
-    output_ir_path: String = None
-    dslx_path: String | list[str] = None
-    stdlib_path: String = None
+    top: Str = None
+    package_name: Str = None
+    # ir_dump_path: Str = None
+    output_ir_path: Str = None
+    dslx_path: Str | list[str] = None
+    stdlib_path: Str = None
     verify: Bool = None
     warnings_as_errors: Bool = None
 
